@@ -4,6 +4,8 @@ const getMyLists=()=>{
   const lists = localStorage.getItem('lists')
   if(lists){
     try{
+      console.log('list added');
+      
       return JSON.parse(lists)
     }catch(error){
       console.error('Error parsing JSOn :',error)
@@ -29,7 +31,7 @@ function Task(props) {
   const [lists, setLists] = useState(getMyLists());
 
   const tg = ['Hobby', 'Duty', 'Work', 'Study','Project']
-  const [taskList, setTaskList] = useState({})
+  const [taskList, setTaskList] = useState(getlist(props.listId))
 
   const [taskText, setTaskText] = useState('')
   const [taskDate, setTaskDate] = useState("")
@@ -41,6 +43,8 @@ function Task(props) {
   const month = new Intl.DateTimeFormat('en-US', options).format(today);
   const day = today.getDate();
   const [greeting, setGreeting] = useState('');
+
+  const [isEdit,setIsEdit] = useState()
 
   const handleFocus = () => {
     setIsExpanded(true);
@@ -62,17 +66,21 @@ function Task(props) {
     const newTask = {
       date: taskDate,
       task: taskText,
+      tags:taskTags,
       id: Date.now()
     };
-    // setTaskList((prevTaskList) => {
-    //   const updatedTaskList = { ...prevTaskList };
-    //   if (updatedTaskList[props.listId]) {
-    //     updatedTaskList[props.listId] = [...updatedTaskList[props.listId], newTask];
-    //   } else {
-    //     updatedTaskList[props.listId] = [newTask];
-    //   }
-    //   return updatedTaskList;
-    // });
+    console.log(newTask,'new');
+    
+    setTaskList((prevTaskList) => {
+      const updatedTaskList = { ...prevTaskList };
+      if (updatedTaskList.todoList.length > 0) {
+        updatedTaskList.todoList = [...updatedTaskList.todoList, newTask];
+      } else {
+        updatedTaskList.todoList = [...updatedTaskList.todoList, newTask];
+      }
+      return updatedTaskList;
+    });
+    setLists(getMyLists())
     setLists((prevLists) => {
       const updatedLists = prevLists.map(list => {
         if (list.id === props.listId) {
@@ -91,8 +99,8 @@ function Task(props) {
     newList.current.focus()
   }
   useEffect(()=>{
+    console.log('trigger lists',taskList);
     localStorage.setItem('lists',JSON.stringify(lists))
-    // console.log(lists)
 },[lists,taskList])
 
   useEffect(() => {
@@ -150,13 +158,13 @@ function Task(props) {
               </div>
 
               <div
-                className={`transition-max-height duration-300 ease-in-out overflow-hidden flex flex-col justify-between items-center bg-neutral-700 text-stone-100 rounded-lg shadow-lg`}
+                className={`transition-max-height duration-300 ease-in-out overflow-hidden flex flex-col  bg-neutral-700 text-stone-100 rounded-lg`}
                 style={{
                   maxHeight: isExpanded ? '10rem' : '0',
                 }}
               >
                 {isExpanded && (
-                  <div className="mt-2 transition-opacity duration-800 p-5 space-y-4 ease-in-out opacity-100">
+                  <div className="mt-2 transition-opacity duration-800 py-5 px-2 space-y-4 ease-in-out opacity-100">
                     <div className='grid grid-cols-3'>
                       <h1>Date </h1>
                       <span><input type="date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} className=" rounded-md bg-neutral-700 text-amber-50" /></span>
@@ -194,8 +202,9 @@ function Task(props) {
 
               {props.listId && taskList.todoList && Array.isArray(taskList.todoList) ? (
                 taskList.todoList.map((todoTask) => (
-                  <li key={todoTask.id} className="flex justify-between items-center bg-neutral-700 text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg">
-                    <span className="flex items-center space-x-3">
+                  
+                  <li key={todoTask.id} className={`flex flex-col justify-between ${todoTask.id===isEdit ? 'bg-neutral-800' : 'bg-neutral-700'}  text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg`}>
+                    <span  onClick={() => setIsEdit((prevId) => prevId === todoTask.id ? null : todoTask.id)} className="flex items-center space-x-3">
                       <input
                         type="checkbox"
                         className="h-6 w-6 rounded-md accent-amber-300"
@@ -221,8 +230,44 @@ function Task(props) {
                         </span>
                       </span>
                     </span>
-                    <button className="rounded-lg px-2 py-1 text-stone-600 font-bold">X</button>
+                    <div
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden flex flex-col  text-stone-100 rounded-lg`}
+                      style={{
+                      maxHeight: todoTask.id===isEdit ? '10rem' : '0',
+                      }}
+                    >
+                      <div className="mt-2 transition-opacity duration-800 py-5 px-2 space-y-4 ease-in-out opacity-100">
+                    <div className='grid grid-cols-3'>
+                      <h1>Date </h1>
+                      <span><input type="date" value={todoTask.date} onChange={(e) => setTaskDate(e.target.value)} className="px-2 rounded-md bg-neutral-700 text-amber-50" /></span>
+                    </div>
+                    <div className='grid grid-cols-3'>
+                      <h1>Tags </h1>
+                      <span className='flex col-span-2'>
+                        {tg.length > 0 && (
+                          tg.map(t => (
+                            <div className='p-1 text-center' key={t}>
+                              <p
+                                onClick={() => {
+                                  setTaskTags((prevTaskTags) =>
+                                    prevTaskTags.includes(t)
+                                      ? prevTaskTags.filter(tag => tag !== t)
+                                      : [...prevTaskTags, t]
+                                  );
+                                }}
+                                className={`${todoTask.tags.includes(t) ? 'bg-neutral-700' : ''} px-1 rounded-md cursor-pointer`}>
+                                {t}
+                              </p>
+                            </div>
+                          ))
+                        )}
+                      </span>
+
+                    </div>
+                  </div>
+                    </div>
                   </li>
+                  
                 ))
               ) : null}
             </ul>
