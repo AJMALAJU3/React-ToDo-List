@@ -47,6 +47,7 @@ function Task(props) {
   const [isEdit,setIsEdit] = useState()
 
   const handleFocus = () => {
+    setIsEdit(null)
     setIsExpanded(true);
   };
   const handleBlur = () => {
@@ -67,6 +68,7 @@ function Task(props) {
       date: taskDate,
       task: taskText,
       tags:taskTags,
+      status:'completed',
       id: Date.now()
     };
     console.log(newTask,'new');
@@ -95,7 +97,8 @@ function Task(props) {
       return updatedLists; 
     });
     setTaskText("");
-    setTaskDate("")
+    setTaskDate("");
+    setTaskTags([])
     newList.current.focus()
   }
   useEffect(()=>{
@@ -204,32 +207,63 @@ function Task(props) {
                 taskList.todoList.map((todoTask) => (
                   
                   <li key={todoTask.id} className={`flex flex-col justify-between ${todoTask.id===isEdit ? 'bg-neutral-800' : 'bg-neutral-700'}  text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg`}>
-                    <span  onClick={() => setIsEdit((prevId) => prevId === todoTask.id ? null : todoTask.id)} className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        className="h-6 w-6 rounded-md accent-amber-300"
-                        checked={todoTask.status === 'completed'}
-                        onChange={() => {
-                          const updatedTaskList = { ...taskList };
-                          updatedTaskList.todoList = updatedTaskList.todoList.map((task) => {
-                            if (task.id === todoTask.id) {
-                              return {
-                                ...task,
-                                status: task.status === 'completed' ? 'pending' : 'completed' 
-                              };
-                            }
-                            return task;
-                          });
-                          setTaskList(updatedTaskList);
-                        }}
-                      />
-                      <span className="flex flex-col mb-2">
-                        <span className="text-neutral-400 text-xs">{todoTask.date}</span>
-                        <span className={`${todoTask.status === 'completed' ? "line-through" : ''} text-neutral-400 text-md font-semibold`}>
-                          {todoTask.task}
-                        </span>
-                      </span>
-                    </span>
+                    <span
+  className="flex items-center space-x-3"
+  onClick={(e) => {
+    // Prevent click events from bubbling up when clicking the parent span
+    e.stopPropagation();
+  }}
+>
+  <input
+    type="checkbox"
+    className="h-6 w-6 rounded-md accent-amber-300"
+    checked={todoTask.status === 'completed'}
+    onChange={(e) => {
+      // Handle checkbox state change
+      const updatedTaskList = { ...taskList };
+      updatedTaskList.todoList = updatedTaskList.todoList.map((task) => {
+        if (task.id === todoTask.id) {
+          return {
+            ...task,
+            status: task.status === 'completed' ? 'pending' : 'completed',
+          };
+        }
+        return task;
+      });
+
+      setTaskList(updatedTaskList);
+
+      // Update `lists` state and sync with localStorage
+      const updatedLists = lists.map((list) => {
+        if (list.id === props.listId) {
+          return { ...list, todoList: updatedTaskList.todoList };
+        }
+        return list;
+      });
+
+      setLists(updatedLists);
+      localStorage.setItem('lists', JSON.stringify(updatedLists)); // Sync localStorage with updated lists
+    }}
+  />
+  <span
+    onClick={(e) => {
+      // Prevent this click from triggering the parent onClick
+      e.stopPropagation();
+      setIsEdit((prevId) => (prevId === todoTask.id ? null : todoTask.id));
+    }}
+    className="flex flex-col mb-2"
+  >
+    <span className="text-neutral-400 text-xs">{todoTask.date}</span>
+    <span
+      className={`${
+        todoTask.status === 'completed' ? 'line-through' : ''
+      } text-neutral-400 text-md font-semibold`}
+    >
+      {todoTask.task}
+    </span>
+  </span>
+</span>
+
                     <div
                       className={`transition-max-height duration-500 ease-in-out overflow-hidden flex flex-col  text-stone-100 rounded-lg`}
                       style={{
