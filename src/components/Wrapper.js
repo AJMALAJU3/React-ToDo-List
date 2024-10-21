@@ -8,7 +8,6 @@ import Alert from './Alert';
 
 const getMyLists = () => {
     const lists = localStorage.getItem('lists');
-    console.log('Retrieved lists from localStorage:', lists); 
     if (lists) {
         try {
             const parsedLists = JSON.parse(lists);
@@ -72,6 +71,7 @@ function Wrapper() {
                 setListId(clickedList ? clickedList.id : null);
                 return updatedLists;
             });
+            localStorage.setItem('lists', JSON.stringify(lists));
             setItemToDelete(null);
             setIsModalOpen(false);
         }
