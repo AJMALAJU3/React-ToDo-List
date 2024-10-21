@@ -1,36 +1,47 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { PencilIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
-const getMyLists=()=>{
+const getMyLists = () => {
   const lists = localStorage.getItem('lists')
-  if(lists){
-    try{
+  if (lists) {
+    try {
       console.log('list added');
-      
+
       return JSON.parse(lists)
-    }catch(error){
-      console.error('Error parsing JSOn :',error)
+    } catch (error) {
+      console.error('Error parsing JSOn :', error)
       return []
     }
-  }else{
+  } else {
     return []
   }
 }
 const getlist = (id) => {
-  const list = localStorage.getItem('lists'); 
+  const list = localStorage.getItem('lists');
   const parsedList = list ? JSON.parse(list) : [];
   if (!Array.isArray(parsedList)) {
     console.error("Parsed list is not an array");
     return {};
   }
-  return parsedList.filter(li => li.id===id)[0] || {};
+  return parsedList.filter(li => li.id === id)[0] || {};
 };
 
 
+const updateChanges = (updatedTaskList,lists,id) =>{
+  const updatedLists = lists.map((list) => {
+    if (list.id === id) {
+      return { ...list, todoList: updatedTaskList.todoList };
+    }
+    return list;
+  });
+
+  return updatedLists
+}
 
 function Task(props) {
   const [lists, setLists] = useState(getMyLists());
 
-  const tg = ['Hobby', 'Duty', 'Work', 'Study','Project']
+  const tg = ['Hobby', 'Duty', 'Work', 'Study', 'Project']
   const [taskList, setTaskList] = useState(getlist(props.listId))
 
   const [taskText, setTaskText] = useState('')
@@ -44,7 +55,7 @@ function Task(props) {
   const day = today.getDate();
   const [greeting, setGreeting] = useState('');
 
-  const [isEdit,setIsEdit] = useState()
+  const [isEdit, setIsEdit] = useState()
 
   const handleFocus = () => {
     setIsEdit(null)
@@ -58,21 +69,21 @@ function Task(props) {
   };
   let newList = useRef(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     setTaskList(getlist(props.listId))
-  },[props.listId])
+  }, [props.listId])
 
 
   function AddTaskToList() {
     const newTask = {
       date: taskDate,
       task: taskText,
-      tags:taskTags,
-      status:'completed',
+      tags: taskTags,
+      status: 'pending',
       id: Date.now()
     };
-    console.log(newTask,'new');
-    
+    console.log(newTask, 'new');
+
     setTaskList((prevTaskList) => {
       const updatedTaskList = { ...prevTaskList };
       if (updatedTaskList.todoList.length > 0) {
@@ -88,23 +99,24 @@ function Task(props) {
         if (list.id === props.listId) {
           return {
             ...list,
-            todoList: [...list.todoList, newTask] 
+            todoList: [...list.todoList, newTask]
           };
         }
-        return list; 
+        return list;
       });
-      
-      return updatedLists; 
+
+      return updatedLists;
     });
+    localStorage.setItem('lists', JSON.stringify(lists));
     setTaskText("");
     setTaskDate("");
     setTaskTags([])
     newList.current.focus()
   }
-  useEffect(()=>{
-    console.log('trigger lists',taskList);
-    localStorage.setItem('lists',JSON.stringify(lists))
-},[lists,taskList])
+  useEffect(() => {
+    console.log('trigger lists', taskList);
+    localStorage.setItem('lists', JSON.stringify(lists))
+  }, [lists, taskList])
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -116,7 +128,7 @@ function Task(props) {
       setGreeting('Good Evening');
     }
   }, []);
-  
+
   if (props.listId) {
     return (
       <div className="md:col-span-7 flex flex-col  items-center w-full">
@@ -205,103 +217,144 @@ function Task(props) {
 
               {props.listId && taskList.todoList && Array.isArray(taskList.todoList) ? (
                 taskList.todoList.map((todoTask) => (
-                  
-                  <li key={todoTask.id} className={`flex flex-col justify-between ${todoTask.id===isEdit ? 'bg-neutral-800' : 'bg-neutral-700'}  text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg`}>
+
+                  <li key={todoTask.id} className={`flex flex-col justify-between ${todoTask.id === isEdit ? 'bg-neutral-800' : 'bg-neutral-700'}  text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg`}>
                     <span
-  className="flex items-center space-x-3"
-  onClick={(e) => {
-    // Prevent click events from bubbling up when clicking the parent span
-    e.stopPropagation();
-  }}
->
-  <input
-    type="checkbox"
-    className="h-6 w-6 rounded-md accent-amber-300"
-    checked={todoTask.status === 'completed'}
-    onChange={(e) => {
-      // Handle checkbox state change
-      const updatedTaskList = { ...taskList };
-      updatedTaskList.todoList = updatedTaskList.todoList.map((task) => {
-        if (task.id === todoTask.id) {
-          return {
-            ...task,
-            status: task.status === 'completed' ? 'pending' : 'completed',
-          };
-        }
-        return task;
-      });
+                      className="flex items-center space-x-3 justify-between"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          className="h-6 w-6 rounded-md accent-amber-300"
+                          checked={todoTask.status === 'completed'}
+                          onChange={(e) => {
+                            const updatedTaskList = { ...taskList };
+                            updatedTaskList.todoList = updatedTaskList.todoList.map((task) => {
+                              if (task.id === todoTask.id) {
+                                return {
+                                  ...task,
+                                  status: task.status === 'completed' ? 'pending' : 'completed',
+                                };
+                              }
+                              return task;
+                            });
+                            setTaskList(updatedTaskList);
+                            setLists(updateChanges(updatedTaskList,lists,props.listId))
+                            localStorage.setItem('lists', JSON.stringify(updateChanges(updatedTaskList,lists,props.listId)));
+                          }}
+                        />
+                        <span
 
-      setTaskList(updatedTaskList);
+                          className="flex flex-col mb-2"
+                        >
+                          <span className="text-neutral-400 text-xs">{todoTask.date}</span>
+                          <span
+                            className={`${todoTask.status === 'completed' ? 'line-through' : ''
+                              } text-neutral-400 text-md font-semibold`}
+                          >
+                            {todoTask.task}
+                          </span>
+                        </span>
+                      </div>
 
-      // Update `lists` state and sync with localStorage
-      const updatedLists = lists.map((list) => {
-        if (list.id === props.listId) {
-          return { ...list, todoList: updatedTaskList.todoList };
-        }
-        return list;
-      });
+                      <div className="flex items-center space-x-2">
+                        {todoTask.id === isEdit ? (
+                          <XMarkIcon
+                            className="h-6 w-6 text-neutral-400 cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsEdit(null);
+                            }}
+                          />
+                        ) : (
+                          <PencilIcon
+                            className="h-5 w-5 text-neutral-400 cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsEdit(todoTask.id);
+                            }}
+                          />
+                        )}
+                      </div>
 
-      setLists(updatedLists);
-      localStorage.setItem('lists', JSON.stringify(updatedLists)); // Sync localStorage with updated lists
-    }}
-  />
-  <span
-    onClick={(e) => {
-      // Prevent this click from triggering the parent onClick
-      e.stopPropagation();
-      setIsEdit((prevId) => (prevId === todoTask.id ? null : todoTask.id));
-    }}
-    className="flex flex-col mb-2"
-  >
-    <span className="text-neutral-400 text-xs">{todoTask.date}</span>
-    <span
-      className={`${
-        todoTask.status === 'completed' ? 'line-through' : ''
-      } text-neutral-400 text-md font-semibold`}
-    >
-      {todoTask.task}
-    </span>
-  </span>
-</span>
+                    </span>
+
 
                     <div
-                      className={`transition-max-height duration-500 ease-in-out overflow-hidden flex flex-col  text-stone-100 rounded-lg`}
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden flex justify-between text-stone-100 rounded-lg`}
                       style={{
-                      maxHeight: todoTask.id===isEdit ? '10rem' : '0',
+                        maxHeight: todoTask.id === isEdit ? '10rem' : '0',
                       }}
                     >
                       <div className="mt-2 transition-opacity duration-800 py-5 px-2 space-y-4 ease-in-out opacity-100">
-                    <div className='grid grid-cols-3'>
-                      <h1>Date </h1>
-                      <span><input type="date" value={todoTask.date} onChange={(e) => setTaskDate(e.target.value)} className="px-2 rounded-md bg-neutral-700 text-amber-50" /></span>
-                    </div>
-                    <div className='grid grid-cols-3'>
-                      <h1>Tags </h1>
-                      <span className='flex col-span-2'>
-                        {tg.length > 0 && (
-                          tg.map(t => (
-                            <div className='p-1 text-center' key={t}>
-                              <p
-                                onClick={() => {
-                                  setTaskTags((prevTaskTags) =>
-                                    prevTaskTags.includes(t)
-                                      ? prevTaskTags.filter(tag => tag !== t)
-                                      : [...prevTaskTags, t]
-                                  );
-                                }}
-                                className={`${todoTask.tags.includes(t) ? 'bg-neutral-700' : ''} px-1 rounded-md cursor-pointer`}>
-                                {t}
-                              </p>
-                            </div>
-                          ))
-                        )}
-                      </span>
+                        <div className='grid grid-cols-3'>
+                          <h1>Date </h1>
+                          <span><input type="date" value={todoTask.date} onChange={(e) => {
+                            const updatedTaskList = { ...taskList };
+                            updatedTaskList.todoList = updatedTaskList.todoList.map((task) => {
+                              if (task.id === todoTask.id) {
+                                return {
+                                  ...task,
+                                  date: e.target.value,
+                                };
+                              }
+                              return task;
+                            });
+                            setTaskList(updatedTaskList)
+                            setLists(updateChanges(updatedTaskList,lists,props.listId))
+                            localStorage.setItem('lists', JSON.stringify(updateChanges(updatedTaskList,lists,props.listId)));
+                          }} className="px-2 rounded-md bg-neutral-700 text-amber-50" /></span>
+                        </div>
+                        <div className='grid grid-cols-3'>
+                          <h1>Tags </h1>
+                          <span className='flex col-span-2 flex-wrap'>
+                            {tg.length > 0 && (
+                              tg.map(t => (
+                                <div className='p-1 text-center' key={t}>
+                                  <p
+  //                                   onClick={() => {
+  //   const updatedTaskList = taskList.todoList.map((task) => {
+  //     if (task.id === todoTask.id) {
+  //       return {
+  //         ...task,
+  //         tags: task.tags.includes(t)
+  //           ? task.tags.filter((tag) => tag !== t)
+  //           : [...task.tags, t],
+  //       };
+  //     }
+  //     return task;
+  //   });
 
-                    </div>
-                  </div>
+  //   // Update the task list state
+  //   setTaskList((prevTaskLists) => ({
+  //     ...prevTaskLists,
+  //     todoList: updatedTaskList,
+  //   }));
+
+  //   // Update the `lists` state and localStorage
+  //   const updatedLists = updateChanges(updatedTaskList, lists, props.listId);
+  //   setLists(updatedLists);
+  //   localStorage.setItem('lists', JSON.stringify(updatedLists));
+  // }}
+                                    className={`${todoTask.tags.includes(t) ? 'bg-neutral-700' : ''} px-1 rounded-md cursor-pointer`}>
+                                    {t}
+                                  </p>
+
+                                </div>
+
+                              ))
+                            )}
+
+                          </span>
+
+                        </div>
+                      </div>
                     </div>
                   </li>
-                  
+
                 ))
               ) : null}
             </ul>

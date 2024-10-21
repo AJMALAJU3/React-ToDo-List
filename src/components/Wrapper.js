@@ -40,9 +40,7 @@ function Wrapper() {
     
 
     useEffect(() => {
-        console.log('Saving lists to localStorage:', lists); 
         localStorage.setItem('lists', JSON.stringify(lists));
-        // setLists(getMyLists());
     }, [lists]);
     useEffect(()=>{
         setLists(getMyLists())
@@ -55,11 +53,6 @@ function Wrapper() {
 
     const handleAddList = (newList) => {
         if (newList.trim()) {
-            const existingList = lists.find(list => list.newList === newList);
-            if (existingList) {
-                console.warn("This list already exists:", newList);
-
-            }
             let newlist = { id: Date.now(), newList, clicked: lists.length === 0, todoList: [] };
             if (lists.length === 0) {
                 setListId(newlist.id);
@@ -103,13 +96,13 @@ function Wrapper() {
 
     
     const selectList = (id) => {
-        const newList = lists.map((li) => ({
-            ...li,
-            clicked: li.id === id 
-        }));
-        console.log(newList,'nw');
-        
-        setLists(newList);
+        setLists(getMyLists())
+        setLists(prevLists=>{
+            return prevLists.map((li) => ({
+                ...li,
+                clicked: li.id === id 
+            }));
+        })
         setListId(id);
     };
 
