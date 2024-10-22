@@ -21,6 +21,7 @@ const getlist = (id) => {
     console.error("Parsed list is not an array");
     return {};
   }
+  console.log(parsedList.filter(li => li.id === id)[0],'listssssss')
   return parsedList.filter(li => li.id === id)[0] || {};
 };
 
@@ -78,10 +79,10 @@ function Task(props) {
     }
   };
   let newList = useRef(null)
-
   useEffect(() => {
+    console.log(props.listId,'id added')
     setTaskList(getlist(props.listId))
-    console.log(taskList,'list added')
+    // console.log(taskList,'list added')
   }, [props.listId])
 
 
@@ -97,14 +98,15 @@ function Task(props) {
 
     setTaskList((prevTaskList) => {
       const updatedTaskList = { ...prevTaskList };
-      
-      if (updatedTaskList.todoList.length > 0) {
-        updatedTaskList.todoList = [...updatedTaskList.todoList, newTask];
+      if (!updatedTaskList.todoList) {
+        updatedTaskList.todoList = [newTask];
       } else {
         updatedTaskList.todoList = [...updatedTaskList.todoList, newTask];
       }
+    
       return updatedTaskList;
     });
+    
     setLists(getMyLists())
     setLists((prevLists) => {
       const updatedLists = prevLists.map(list => {
@@ -126,7 +128,7 @@ function Task(props) {
     newList.current.focus()
   }
   useEffect(() => {
-    console.log('trigger lists', taskList);
+    // console.log('trigger lists', taskList);
     localStorage.setItem('lists', JSON.stringify(lists))
   }, [lists, taskList])
 
@@ -432,16 +434,16 @@ function Task(props) {
           </h1>
           <div className="">
             <div>
-              <h1 className="text-6xl font-bold text-stone-100">{greeting}</h1>
+              <h1 className="text-6xl font-bold text-amber-400">{greeting}</h1>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-stone-500 ml-4">What's Your Plan Today?</h1>
+              <h1 className="text-4xl font-bold text-stone-300 ml-4">What's Your Plan Today?</h1>
             </div>
           </div>
         </div>
 
         <div className="mt-10">
-          <h1 className="font-bold text-stone-500">Select a list to add Task..</h1>
+          <h1 className="font-bold text-stone-400">Select a list to add Task..</h1>
         </div>
       </div>
     )

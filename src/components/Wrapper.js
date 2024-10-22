@@ -42,6 +42,7 @@ function Wrapper() {
         localStorage.setItem('lists', JSON.stringify(lists));
     }, [lists]);
     useEffect(()=>{
+        
         setLists(getMyLists())
     },[listId])
 
@@ -54,6 +55,7 @@ function Wrapper() {
         if (newList.trim()) {
             let newlist = { id: Date.now(), newList, clicked: lists.length === 0, todoList: [] };
             if (lists.length === 0) {
+                console.log(newlist.id,'s')
                 setListId(newlist.id);
             }
             setLists((prevLists) => [...prevLists, newlist]);
@@ -179,7 +181,7 @@ function Wrapper() {
                 )}
             </div>
 
-            <Task listId={listId} />
+            <Task listId={listId}  />
 
             <div className="md:col-span-3 bg-neutral-700 hidden lg:block">
                 <Calendar />
