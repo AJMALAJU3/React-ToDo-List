@@ -1,13 +1,11 @@
-// src/Calendar.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
-const Calendar = () => {
+const Calendar = ({ list }) => {
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
   const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
-
   const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
 
   const handlePrevMonth = () => {
@@ -37,6 +35,31 @@ const Calendar = () => {
     month === currentDate.getMonth() &&
     year === currentDate.getFullYear();
 
+  const [freqTasks, setFreqTasks] = useState({});
+
+  useEffect(() => {
+    const taskOfDays = {};
+    list.forEach((li) => {
+      li.todoList.forEach((task) => {
+        const taskDate = new Date(task.date); 
+        const taskDay = taskDate.getDate();
+        const taskMonth = taskDate.getMonth();
+        const taskYear = taskDate.getFullYear();
+
+
+        if (taskMonth === month && taskYear === year) {
+          if (taskOfDays[taskDay]) {
+            taskOfDays[taskDay].push(task.id);
+          } else {
+            taskOfDays[taskDay] = [task.id];
+          }
+        }
+      });
+    });
+    setFreqTasks(taskOfDays);
+    console.log(taskOfDays,'sadf')
+  }, [list, month, year]);
+
   return (
     <div className="max-w-md mx-auto mt-8 p-4 md:p-6 lg:p-8">
       <div className="flex justify-between items-center mb-4">
@@ -54,7 +77,6 @@ const Calendar = () => {
         </button>
       </div>
 
-      {/* Weekdays Header */}
       <div className="grid grid-cols-7 text-center font-semibold mb-2 text-amber-50">
         <div className="p-2">S</div>
         <div className="p-2">M</div>
@@ -65,22 +87,33 @@ const Calendar = () => {
         <div className="p-2">S</div>
       </div>
 
-      {/* Dates Grid */}
       <div className="grid grid-cols-7 gap-2">
         {Array.from({ length: firstDayIndex }, (_, index) => (
           <div key={index} className="p-4 rounded-lg" />
         ))}
-        {days.map((day) => (
-          <div
-            key={day}
-            className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm ${
-              isCurrentDay(day) ? 'bg-amber-400' : ''
-            }`}
-          >
-            {day}
-          </div>
-        ))}
+
+        {days.map((day) => {
+          const taskCount = freqTasks[day] ? freqTasks[day].length : 0;
+
+          const getBgColor = (taskCount) => {
+            if (taskCount === 0) return 'bg-neutral-700';
+            if (taskCount > 0) return 'bg-neutral-500'; 
+            // return 'bg-amber-600';
+          };
+
+          return (
+            <div
+              key={day}
+              className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm ${getBgColor(taskCount)} ${
+                isCurrentDay(day) ? 'ring-2 ring-amber-400' : ''
+              }`}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
+
       <div className="w-full flex items-center justify-center py-6">
         <button className="rounded-md py-1 px-4 font-semibold text-md bg-stone-400 text-amber-50 hover:text-stone-600 hover:bg-amber-300">
           Show All

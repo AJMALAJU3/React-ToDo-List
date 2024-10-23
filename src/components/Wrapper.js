@@ -4,7 +4,7 @@ import SortMethods from './SortMethods';
 import { CalendarIcon } from '@heroicons/react/24/solid';
 import Task from './Task';
 import Alert from './Alert';
-
+import SortedData from './sortedData';
 
 const getMyLists = () => {
     const lists = localStorage.getItem('lists');
@@ -20,7 +20,9 @@ const getMyLists = () => {
     }
     return []; 
 };
-
+function calendarSort(date,tag,sortAll){
+    console.log(sortAll)
+}
 function Wrapper() {
     const [listId, setListId] = useState(null);
     const [lists, setLists] = useState(getMyLists());
@@ -29,6 +31,7 @@ function Wrapper() {
     const inputRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [isSorting,setIsSorting] = useState(false)
 
     if (listId === null && lists.length > 0) {
         const clickedList = lists.find(li => li.clicked);
@@ -180,11 +183,15 @@ function Wrapper() {
                     />
                 )}
             </div>
+            {isSorting ? (
+    <SortedData sort={calendarSort} list={lists}/>
+) : (
+    <Task listId={listId} />
+)}
 
-            <Task listId={listId}  />
 
             <div className="md:col-span-3 bg-neutral-700 hidden lg:block">
-                <Calendar />
+                <Calendar list={lists}/>
                 <SortMethods />
             </div>
         </>

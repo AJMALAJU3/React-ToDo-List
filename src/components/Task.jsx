@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { PencilIcon, XMarkIcon, TrashIcon } from '@heroicons/react/24/solid';
 
+
+
 const getMyLists = () => {
   const lists = localStorage.getItem('lists')
   if (lists) {
@@ -128,7 +130,6 @@ function Task(props) {
     newList.current.focus()
   }
   useEffect(() => {
-    // console.log('trigger lists', taskList);
     localStorage.setItem('lists', JSON.stringify(lists))
   }, [lists, taskList])
 
@@ -158,8 +159,8 @@ function Task(props) {
             <div>
               <h1 className="text-6xl font-bold text-stone-100">{greeting}</h1>
             </div>
-            <div>
-              <h1 className="text-4xl font-bold text-stone-500">What's Your Plan Today?</h1>
+            <div className=''>
+              <h1 className="text-4xl font-bold text-stone-500">Plan Your Task's Today!</h1>
             </div>
           </div>
         </div>
@@ -434,14 +435,14 @@ function Task(props) {
           </h1>
           <div className="">
             <div>
-              <h1 className="text-6xl font-bold text-amber-400">{greeting}</h1>
+              <h1 className="text-6xl font-bold text-stone-300 ">{greeting}</h1>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-stone-300 ml-4">What's Your Plan Today?</h1>
+              <h1 className="text-4xl font-bold text-amber-400 ml-4">Plan Your Task's Today !</h1>
             </div>
           </div>
         </div>
-
+        
         <div className="mt-10">
           <h1 className="font-bold text-stone-400">Select a list to add Task..</h1>
         </div>
