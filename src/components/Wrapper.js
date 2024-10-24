@@ -116,7 +116,7 @@ function Wrapper() {
             <div className="md:col-span-2 bg-neutral-700 hidden lg:block">
                 <div className="mb-5 flex justify-center items-center p-4 space-x-2">
                     <h1 className="font-semibold text-stone-100 text-lg md:text-2xl lg:text-3xl rounded-lg">
-                        TODO LIST
+                        TIC TASC
                     </h1>
                     <CalendarIcon className="w-10 h-10 text-amber-400 p-1" />
                 </div>
