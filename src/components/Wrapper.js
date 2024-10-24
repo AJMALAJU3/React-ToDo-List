@@ -20,9 +20,8 @@ const getMyLists = () => {
     }
     return []; 
 };
-function calendarSort(date,tag,sortAll){
-    console.log(sortAll)
-}
+
+
 function Wrapper() {
     const [listId, setListId] = useState(null);
     const [lists, setLists] = useState(getMyLists());
@@ -31,7 +30,10 @@ function Wrapper() {
     const inputRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
-    const [isSorting,setIsSorting] = useState(false)
+    const [isSorting,setIsSorting] = useState(true)
+    const [sortDate,setSortDate] = useState(null)
+    const [sortTag,setSortTag] = useState([])
+    const [selectAll,setSelectAll] = useState(false)
 
     if (listId === null && lists.length > 0) {
         const clickedList = lists.find(li => li.clicked);
@@ -39,8 +41,16 @@ function Wrapper() {
             setListId(clickedList.id);
         }
     }
-    
-
+    const calendarSort = (date,tag,sortAll) =>{
+        console.log(date,tag,sortAll)
+        setSortDate(date)
+        setSortTag(tag)
+        setSelectAll(sortAll)
+    }
+    const listUpdated = (list)=>{
+        console.log('listUPdate',list)
+        setLists(list)
+    }
     useEffect(() => {
         localStorage.setItem('lists', JSON.stringify(lists));
     }, [lists]);
@@ -184,14 +194,14 @@ function Wrapper() {
                 )}
             </div>
             {isSorting ? (
-    <SortedData sort={calendarSort} list={lists}/>
+    <SortedData sort={calendarSort} list={lists} date={sortDate} tag={sortTag} selectAll={selectAll}/>
 ) : (
-    <Task listId={listId} />
+    <Task listId={listId} taskUpdate={listUpdated}/>
 )}
 
 
             <div className="md:col-span-3 bg-neutral-700 hidden lg:block">
-                <Calendar list={lists}/>
+                <Calendar list={lists} calendarSort={calendarSort}/>
                 <SortMethods />
             </div>
         </>

@@ -39,7 +39,15 @@ function SortedData(props) {
           <div className='w-full'>
             
             <ul id="taskList" class="space-y-4">
-                <li>sdfon</li>
+                <li
+                    
+                    className={`flex flex-col justify-between bg-neutral-700
+                    text-stone-100 hover:text-stone-600 p-3 rounded-lg 
+                    hover:bg-neutral-800 shadow-lg 
+                    transition-all transform scale-0 opacity-0 duration-500 ease-in-out `}
+                  >
+                    
+                  </li>
             </ul>
           </div>
         </div>

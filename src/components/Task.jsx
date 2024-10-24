@@ -113,6 +113,7 @@ function Task(props) {
     setLists((prevLists) => {
       const updatedLists = prevLists.map(list => {
         if (list.id === props.listId) {
+
           return {
             ...list,
             todoList: [...list.todoList, newTask]
@@ -120,6 +121,7 @@ function Task(props) {
         }
         return list;
       });
+      props.taskUpdate(updatedLists)
 
       return updatedLists;
     });
@@ -128,6 +130,7 @@ function Task(props) {
     setTaskDate("");
     setTaskTags([])
     newList.current.focus()
+
   }
   useEffect(() => {
     localStorage.setItem('lists', JSON.stringify(lists))
@@ -332,6 +335,7 @@ function Task(props) {
                             setTaskList(updatedTaskList)
                             setLists(updateChanges(updatedTaskList, lists, props.listId))
                             localStorage.setItem('lists', JSON.stringify(updateChanges(updatedTaskList, lists, props.listId)));
+                            props.taskUpdate(updateChanges(updatedTaskList, lists, props.listId))
                           }} className="px-2 rounded-md bg-neutral-700 text-amber-50 border-none outline-none focus:outline-none focus:ring-0 w-full" /></span>
                         </div>
                         <div className='grid grid-cols-3'>
@@ -350,6 +354,7 @@ function Task(props) {
                             setTaskList(updatedTaskList)
                             setLists(updateChanges(updatedTaskList, lists, props.listId))
                             localStorage.setItem('lists', JSON.stringify(updateChanges(updatedTaskList, lists, props.listId)));
+                            props.taskUpdate(updateChanges(updatedTaskList, lists, props.listId))
                           }} className="px-2 rounded-md bg-neutral-700 text-amber-50" /></span>
                         </div>
 
@@ -377,6 +382,7 @@ function Task(props) {
                                       setTaskList(updatedLists)
                                       setLists(updateChanges(updatedLists, lists, props.listId))
                                       localStorage.setItem('lists', JSON.stringify(updateChanges(updatedLists, lists, props.listId)));
+                                      props.taskUpdate(updateChanges(updatedLists, lists, props.listId))
                                     }}
                                     className={`${todoTask.tags.includes(t) ? 'bg-neutral-700' : ''} px-1 rounded-md cursor-pointer`}>
                                     {t}

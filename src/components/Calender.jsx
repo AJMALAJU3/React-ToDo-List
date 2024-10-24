@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
-const Calendar = ({ list }) => {
+const Calendar = ({ list,calendarSort }) => {
+  const [sortDay,setSortDay] = useState(null)
+  const [sortTag,setSortTag] = useState([])
+  const [selectAll,setSelectAll] = useState(false)
+
+  // const sortHelper = () => {
+    
+  // }
+  useEffect(()=>{
+    calendarSort(sortDay,sortTag,selectAll)
+  },[sortDay,sortTag,selectAll])
+
+
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -104,6 +116,7 @@ const Calendar = ({ list }) => {
           return (
             <div
               key={day}
+              onClick={()=>setSortDay(`${year}-${(month+1).toString().padStart(2, '0')}-${day}`)}
               className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm ${getBgColor(taskCount)} ${
                 isCurrentDay(day) ? 'ring-2 ring-amber-400' : ''
               }`}
@@ -115,7 +128,14 @@ const Calendar = ({ list }) => {
       </div>
 
       <div className="w-full flex items-center justify-center py-6">
-        <button className="rounded-md py-1 px-4 font-semibold text-md bg-stone-400 text-amber-50 hover:text-stone-600 hover:bg-amber-300">
+      <button
+  onClick={() => setSelectAll((p) => !p)}
+  className={`rounded-md py-1 px-4 font-semibold text-md ${
+    selectAll
+      ? 'hover:text-stone-600 bg-amber-300 hover:bg-amber-200'
+      : 'bg-stone-400 hover:bg-stone-500 text-amber-50 transition-300'
+  }`}
+>
           Show All
         </button>
       </div>
