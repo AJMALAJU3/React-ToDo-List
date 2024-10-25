@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 const Calendar = ({ list,calendarSort }) => {
-  const [sortDay,setSortDay] = useState(null)
+  const [sortDay,setSortDay] = useState([])
   const [sortTag,setSortTag] = useState([])
   const [selectAll,setSelectAll] = useState(false)
 
@@ -10,6 +10,8 @@ const Calendar = ({ list,calendarSort }) => {
     
   // }
   useEffect(()=>{
+    console.log(sortDay,'day');
+    
     calendarSort(sortDay,sortTag,selectAll)
   },[sortDay,sortTag,selectAll])
 
@@ -109,16 +111,25 @@ const Calendar = ({ list,calendarSort }) => {
 
           const getBgColor = (taskCount) => {
             if (taskCount === 0) return 'bg-neutral-700';
-            if (taskCount > 0) return 'bg-neutral-500'; 
+            if (taskCount > 0) return 'bg-neutral-800'; 
             // return 'bg-amber-600';
           };
 
           return (
             <div
               key={day}
-              onClick={()=>setSortDay(`${year}-${(month+1).toString().padStart(2, '0')}-${day}`)}
-              className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm ${getBgColor(taskCount)} ${
-                isCurrentDay(day) ? 'ring-2 ring-amber-400' : ''
+              onClick={()=>setSortDay(prev=>{
+                let updatedDays = [...prev]
+                const clickedDay = `${year}-${(month+1).toString().padStart(2, '0')}-${day}`
+                if(prev.includes(clickedDay)){
+                  updatedDays = updatedDays.filter(p=>p!==clickedDay)
+                }else{
+                  updatedDays = [...updatedDays,clickedDay]
+                }
+                return updatedDays
+              })}
+              className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm  ${sortDay.includes(`${year}-${(month+1).toString().padStart(2, '0')}-${day}`)?'bg-neutral-500 ring-2 ring-neutral-400':getBgColor(taskCount)} ${
+                isCurrentDay(day) ? 'ring-2 ring-amber-400' : ``
               }`}
             >
               {day}
@@ -127,8 +138,18 @@ const Calendar = ({ list,calendarSort }) => {
         })}
       </div>
 
-      <div className="w-full flex items-center justify-center py-6">
+      <div className="w-full flex items-center justify-around py-6">
       <button
+      onClick={()=>{
+        setSelectAll(false)
+        setSortDay([])
+        setSortTag([])
+      }}
+  className='rounded-md py-1 px-4 font-semibold text-md 
+       bg-stone-400 hover:bg-stone-500 text-amber-50 transition-300'>
+          Refresh
+        </button>
+        <button
   onClick={() => setSelectAll((p) => !p)}
   className={`rounded-md py-1 px-4 font-semibold text-md ${
     selectAll
