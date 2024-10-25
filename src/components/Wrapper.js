@@ -30,7 +30,7 @@ function Wrapper() {
     const inputRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
-    const [isSorting,setIsSorting] = useState(true)
+    const [isSorting,setIsSorting] = useState(false)
     const [sortDate,setSortDate] = useState(null)
     const [sortTag,setSortTag] = useState([])
     const [selectAll,setSelectAll] = useState(false)
@@ -200,7 +200,7 @@ function Wrapper() {
 )}
 
 
-            <div className="md:col-span-3 bg-neutral-700 hidden lg:block">
+            <div className="md:col-span-4 bg-neutral-700 hidden md:block">
                 <Calendar list={lists} calendarSort={calendarSort}/>
                 <SortMethods />
             </div>

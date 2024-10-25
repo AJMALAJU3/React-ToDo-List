@@ -149,21 +149,21 @@ function Task(props) {
 
   if (props.listId) {
     return (
-      <div className="md:col-span-7 flex flex-col  items-center w-full overflow-y-auto" style={{scrollbarWidth:'none'}}>
+      <div className="md:col-span-8 flex flex-col  items-center w-full overflow-y-auto "  style={{scrollbarWidth:'none'}}>
 
         <div className="p-10 pt-10 grid grid-cols-12 gap-2 w-full">
           <h1 className="text-3xl font-bold text-stone-100 rounded-lg col-span-2 text-center">
             <div className="flex flex-col items-center">
-              <span className="block text-3xl">{month}</span>
-              <span className="block text-4xl">{day}</span>
+              <span className="block md:text-3xl text-2xl">{month}</span>
+              <span className="block md:text-4xl text-1xl">{day}</span>
             </div>
           </h1>
           <div className="col-span-10">
             <div>
-              <h1 className="text-6xl font-bold text-stone-100">{greeting}</h1>
+              <h1 className="md:text-6xl text-3xl font-bold text-stone-100">{greeting}</h1>
             </div>
             <div className=''>
-              <h1 className="text-4xl font-bold text-stone-500">Plan Your Task's Today!</h1>
+              <h1 className="md:text-4xl text-1xl font-bold text-stone-500">Plan Your Task's Today!</h1>
             </div>
           </div>
         </div>
