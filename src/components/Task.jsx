@@ -149,7 +149,7 @@ function Task(props) {
 
   if (props.listId) {
     return (
-      <div className="md:col-span-8 flex flex-col  items-center w-full overflow-y-auto "  style={{scrollbarWidth:'none'}}>
+      <div className="md:col-span-8 flex flex-col lg:col-span-7  items-center w-full overflow-y-auto "  style={{scrollbarWidth:'none'}}>
 
         <div className="p-10 pt-10 grid grid-cols-12 gap-2 w-full">
           <h1 className="text-3xl font-bold text-stone-100 rounded-lg col-span-2 text-center">

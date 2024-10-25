@@ -200,7 +200,7 @@ function Wrapper() {
 )}
 
 
-            <div className="md:col-span-4 bg-neutral-700 hidden md:block">
+            <div className="md:col-span-4 lg:col-span-3 bg-neutral-700 hidden md:block">
                 <Calendar list={lists} calendarSort={calendarSort}/>
                 <SortMethods />
             </div>
