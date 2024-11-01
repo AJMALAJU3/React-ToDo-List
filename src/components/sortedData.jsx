@@ -1,6 +1,22 @@
 import React,{useState,useEffect} from 'react';
 
-function SortedData(props) { 
+
+const getMyLists = () => {
+  const lists = localStorage.getItem('lists')
+  if (lists) {
+    console.log(lists,'kitti')
+    try {
+      return JSON.parse(lists)
+    } catch (error) {
+      console.error('Error parsing JSOn :', error)
+      return []
+    }
+  } else {
+    return []
+  }
+}
+function SortedData({sort,list,date,tag,selectAll}) { 
+  const [lists, setLists] = useState(getMyLists());
     const today = new Date();
   const options = { month: 'short' };
   const month = new Intl.DateTimeFormat('en-US', options).format(today);
@@ -38,17 +54,61 @@ function SortedData(props) {
         <div className="col-span-10 px-10 py-4 text-stone-100 w-full flex flex-col items-center">
           <div className='w-full'>
             
-            <ul id="taskList" class="space-y-4">
-                <li
-                    
-                    className={`flex flex-col justify-between bg-neutral-700
-                    text-stone-100 hover:text-stone-600 p-3 rounded-lg 
-                    hover:bg-neutral-800 shadow-lg 
-                    transition-all transform scale-0 opacity-0 duration-500 ease-in-out `}
-                  >
-                    
-                  </li>
-            </ul>
+          <ul id="taskList" className="space-y-4">
+  {lists.map((myList, index) => {
+    return myList.todoList.map((todolist, subIndex) => {
+console.log(todolist.tags,tag,tag.some(t => todolist.tags.includes(t)),'sd');
+
+      if (
+        Array.isArray(date) &&
+        (date.includes(todolist.date) || tag.some(t => todolist.tags.includes(t)))
+      ) {
+      
+return (
+        <li
+          key={`${index}-${subIndex}`}
+          className={`flex flex-col justify-between bg-neutral-700
+          text-stone-100 hover:text-stone-600 p-3 rounded-lg 
+          hover:bg-neutral-800 shadow-lg`}
+        >
+          <span
+                      className="flex items-center space-x-3 justify-between"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          className="h-6 w-6 rounded-md accent-amber-300"
+                          checked={todolist.status === 'completed'}
+                        />
+                        <span
+
+                          className="flex flex-col mb-2"
+                        >
+                          <span className="text-neutral-400 text-xs">{todolist.date}</span>
+                          <span
+                            className={`${todolist.status === 'completed' ? 'line-through text-neutral-400' : 'text-neutral-300'
+                              }  text-md font-semibold mb-1 mt-1`}
+                          >
+                            {todolist.task}
+                          </span>
+                          <span className='text-neutral-400 text-xs'>
+                            {todolist.tags.map(tag => `#${tag.toLowerCase()} `)}
+                          </span>
+                        </span>
+                      </div>
+                      </span>
+        </li>
+      );
+      }
+      return ('')
+      
+    });
+  })}
+</ul>
+
           </div>
         </div>
       </div>

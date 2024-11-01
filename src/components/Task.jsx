@@ -23,7 +23,7 @@ const getlist = (id) => {
     console.error("Parsed list is not an array");
     return {};
   }
-  console.log(parsedList.filter(li => li.id === id)[0],'listssssss')
+  console.log(parsedList.filter(li => li.id === id)[0], 'listssssss')
   return parsedList.filter(li => li.id === id)[0] || {};
 };
 
@@ -40,7 +40,7 @@ const updateChanges = (updatedTaskList, lists, id) => {
 }
 
 function Task(props) {
-  const [isDeleting, setIsDeleting] = useState(null); 
+  const [isDeleting, setIsDeleting] = useState(null);
   const handleDelete = (taskId) => {
     setIsDeleting(taskId);
     setTimeout(() => {
@@ -48,13 +48,13 @@ function Task(props) {
       updated.todoList = updated.todoList.filter((task) => task.id !== taskId);
       setTaskList(updated);
       setLists(updateChanges(updated, lists, props.listId));
-      setIsDeleting(null); 
+      setIsDeleting(null);
     }, 500);
   };
 
   const [lists, setLists] = useState(getMyLists());
 
-  const tg = ['Hobby', 'Duty', 'Work', 'Study', 'Project']
+  const tg = props.tg
   const [taskList, setTaskList] = useState(getlist(props.listId))
 
   const [taskText, setTaskText] = useState('')
@@ -82,7 +82,7 @@ function Task(props) {
   };
   let newList = useRef(null)
   useEffect(() => {
-    console.log(props.listId,'id added')
+    console.log(props.listId, 'id added')
     setTaskList(getlist(props.listId))
     // console.log(taskList,'list added')
   }, [props.listId])
@@ -105,10 +105,10 @@ function Task(props) {
       } else {
         updatedTaskList.todoList = [...updatedTaskList.todoList, newTask];
       }
-    
+
       return updatedTaskList;
     });
-    
+
     setLists(getMyLists())
     setLists((prevLists) => {
       const updatedLists = prevLists.map(list => {
@@ -149,7 +149,7 @@ function Task(props) {
 
   if (props.listId) {
     return (
-      <div className="md:col-span-8 flex flex-col lg:col-span-7  items-center w-full overflow-y-auto "  style={{scrollbarWidth:'none'}}>
+      <div className="md:col-span-8 flex flex-col lg:col-span-7  items-center w-full overflow-y-auto " style={{ scrollbarWidth: 'none' }}>
 
         <div className="p-10 pt-10 grid grid-cols-12 gap-2 w-full">
           <h1 className="text-3xl font-bold text-stone-100 rounded-lg col-span-2 text-center">
@@ -185,9 +185,9 @@ function Task(props) {
                   className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-700 rounded-lg p-2 w-full pt-4"
                   placeholder="Add Todo"
                 />
-                
-                  <button onClick={AddTaskToList} className={`rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}>Add</button>
-                
+
+                <button onClick={!taskText ? null : AddTaskToList} className={`rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}>Add</button>
+
               </div>
 
               <div
@@ -448,7 +448,7 @@ function Task(props) {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-10">
           <h1 className="font-bold text-stone-400">Select a list to add Task..</h1>
         </div>

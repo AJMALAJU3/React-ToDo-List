@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calendar from './Calender';
-import SortMethods from './SortMethods';
 import { CalendarIcon } from '@heroicons/react/24/solid';
 import Task from './Task';
 import Alert from './Alert';
@@ -20,7 +19,20 @@ const getMyLists = () => {
     }
     return []; 
 };
-
+const getMyTags = () => {
+    const tags = localStorage.getItem('tags')
+    if (tags) {
+        try {
+            const parsedTags = JSON.parse(tags);
+            console.log('Parsed Tags:', parsedTags);
+            return Array.isArray(parsedTags) ? parsedTags : []; 
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return [];
+        }
+    }
+    return []; 
+}
 
 function Wrapper() {
     const [listId, setListId] = useState(null);
@@ -31,9 +43,10 @@ function Wrapper() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [isSorting,setIsSorting] = useState(false)
-    const [sortDate,setSortDate] = useState(null)
+    const [sortDate,setSortDate] = useState([])
     const [sortTag,setSortTag] = useState([])
     const [selectAll,setSelectAll] = useState(false)
+    const [tags,setTags] = useState(getMyTags)
 
     if (listId === null && lists.length > 0) {
         const clickedList = lists.find(li => li.clicked);
@@ -42,7 +55,7 @@ function Wrapper() {
         }
     }
     const calendarSort = (date,tag,sortAll) =>{
-        console.log(date,tag,sortAll)
+        console.log(date,tag,sortAll,'hjgk')
         setSortDate(date)
         setSortTag(tag)
         setSelectAll(sortAll)
@@ -54,6 +67,9 @@ function Wrapper() {
     useEffect(() => {
         localStorage.setItem('lists', JSON.stringify(lists));
     }, [lists]);
+    useEffect(()=>{
+        localStorage.setItem('tags',JSON.stringify(tags))
+    },[tags])
     useEffect(()=>{
         
         setLists(getMyLists())
@@ -144,8 +160,8 @@ function Wrapper() {
                                     key={list.id}
                                     onClick={() => selectList(list.id)}
                                     className={`flex justify-between items-center 
-                                    ${list.clicked ? 'bg-amber-300 text-stone-600' : 'text-stone-100 hover:bg-stone-400 hover:text-stone-600'} 
-                                    p-3 rounded-lg shadow-lg transition duration-200 ease-linear`}
+                                    ${list.clicked ? 'bg-amber-300 text-stone-600' : 'text-stone-100 hover:bg-stone-600 '} 
+                                    p-3 rounded-lg shadow-lg transition duration-200 ease-linear group`}
                                 >
                                     {list.newList}
                                     <button
@@ -153,7 +169,7 @@ function Wrapper() {
                                             e.stopPropagation();
                                             openModal(list.id);
                                         }}
-                                        className="rounded-lg px-2 py-1 text-stone-600 font-bold"
+                                        className={`rounded-lg px-2 py-1 text-stone-500 ${list.clicked ? '' : 'group-hover:text-stone-800  '} `}
                                     >
                                         X
                                     </button>
@@ -196,14 +212,14 @@ function Wrapper() {
             {isSorting ? (
     <SortedData sort={calendarSort} list={lists} date={sortDate} tag={sortTag} selectAll={selectAll}/>
 ) : (
-    <Task listId={listId} taskUpdate={listUpdated}/>
+    <Task listId={listId} taskUpdate={listUpdated} tg={tags} />
 )}
 
 
-            <div className="md:col-span-4 lg:col-span-3 bg-neutral-700 hidden md:block">
-                <Calendar list={lists} calendarSort={calendarSort}/>
-                <SortMethods />
-            </div>
+<div className="md:col-span-4 lg:col-span-3 bg-neutral-700 hidden md:block  overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+  <Calendar list={lists} calendarSort={calendarSort} isSort={setIsSorting} setTags={setTags} tg={tags}/>
+</div>
+
         </>
     );
 }
