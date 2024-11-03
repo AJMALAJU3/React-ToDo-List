@@ -55,11 +55,26 @@ function Wrapper() {
         }
     }
     const calendarSort = (date,tag,sortAll) =>{
-        console.log(date,tag,sortAll,'hjgk')
         setSortDate(date)
         setSortTag(tag)
         setSelectAll(sortAll)
     }
+    const deleteListTag = (tag) => {
+        console.log(lists, 'before deleteListTag');
+    
+
+        const newList = lists.map(list => ({
+            ...list,
+            todoList: list.todoList.map(li => ({
+                ...li,
+                tags: li.tags.filter(p => p !== tag) 
+            }))
+        }));
+    
+        console.log(newList, 'after deleteListTag');
+
+        setLists(newList); 
+    };
     const listUpdated = (list)=>{
         console.log('listUPdate',list)
         setLists(list)
@@ -210,14 +225,14 @@ function Wrapper() {
                 )}
             </div>
             {isSorting ? (
-    <SortedData sort={calendarSort} list={lists} date={sortDate} tag={sortTag} selectAll={selectAll}/>
+    <SortedData sort={calendarSort} list={lists} date={sortDate} tag={sortTag} selectAll={selectAll} listId={listId}/>
 ) : (
     <Task listId={listId} taskUpdate={listUpdated} tg={tags} />
 )}
 
 
 <div className="md:col-span-4 lg:col-span-3 bg-neutral-700 hidden md:block  overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-  <Calendar list={lists} calendarSort={calendarSort} isSort={setIsSorting} setTags={setTags} tg={tags}/>
+  <Calendar list={lists} calendarSort={calendarSort} isSort={setIsSorting} setTags={setTags} tg={tags} deleteListTag={deleteListTag}/>
 </div>
 
         </>

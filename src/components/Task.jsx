@@ -84,7 +84,6 @@ function Task(props) {
   useEffect(() => {
     console.log(props.listId, 'id added')
     setTaskList(getlist(props.listId))
-    // console.log(taskList,'list added')
   }, [props.listId])
 
 

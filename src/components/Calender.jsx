@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {PlusIcon,TrashIcon , ChevronLeftIcon, ChevronRightIcon,PencilIcon } from '@heroicons/react/24/solid';
+import {TrashIcon , ChevronLeftIcon, ChevronRightIcon,PencilIcon } from '@heroicons/react/24/solid';
 
 
-const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
+const Calendar = ({ list, calendarSort, isSort, setTags, tg ,deleteListTag}) => {
 
   const [sortDay, setSortDay] = useState([])
   const [sortTag, setSortTag] = useState([])
@@ -12,7 +12,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
   const [addTagText,setAddTagText] = useState('')
 
   useEffect(() => {
-    console.log(sortDay, 'day');
     if (sortDay.length > 0 || sortTag.length > 0 || selectAll) {
       isSort(true)
       calendarSort(sortDay, sortTag, selectAll)
@@ -20,7 +19,7 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
       isSort(false)
     }
 
-  }, [sortDay, sortTag, selectAll])
+  }, [sortDay, sortTag, selectAll,calendarSort,isSort])
 
 
   const [month, setMonth] = useState(new Date().getMonth());
@@ -88,7 +87,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
     });
 
     setFreqTasks(taskOfDays);
-    console.log(taskOfDays, 'sadf')
   }, [list, month, year]);
 
   return (
@@ -131,7 +129,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
               const getBgColor = (taskCount) => {
                 if (taskCount === 0) return 'bg-neutral-700';
                 if (taskCount > 0) return 'bg-neutral-800';
-                // return 'bg-amber-600';
               };
 
               return (
@@ -184,7 +181,10 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
         <div className='max-w-md mx-auto '>
           <div className='flex justify-between'>
             <h1 className='text-amber-50 font-bold mb-2'>Sort Methods</h1>
-            <button onClick={() => setSortIsEdit(p => !p)} className='font-bold text-neutral-300'>{!sortIsEdit ? <PencilIcon
+            <button onClick={() => {
+              setSortIsEdit(p => !p)
+            }
+          } className='font-bold text-neutral-300'>{!sortIsEdit ? <PencilIcon
                             className="h-4 w-4 text-neutral-400 cursor-pointer"
                           /> : 'Done'}</button>
           </div>
@@ -198,16 +198,15 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
                       className={` rounded-md cursor-pointer w-auto flex items-center justify-center text-amber-50 bg-neutral-900 border-0 p-2 focus:outline-none`}
                     />
 
-                    <PlusIcon
-                      className={`h-5 w-5 text-neutral-400 cursor-pointer`}
+                    
+                    <p className={`h-5 w-5 ${addTagText === '' ?'text-stone-600':'text-neutral-400'} cursor-pointer`}
                       onClick={(e) => {
                         e.stopPropagation();
                         if(addTagText !== ''){
                           addTag(addTagText)
                         }
                         
-                      }}
-                    />
+                      }}>add</p>
                   </div>
 
             {Array.isArray(tg) && tg.length > 0 ? (
@@ -239,7 +238,9 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg }) => {
                       className={`h-5 w-5 text-neutral-400 cursor-pointer`}
                       onClick={(e) => {
                         e.stopPropagation();
+                        deleteListTag(t)
                         setTags(tags=>tags.filter(p=>p!==t))
+                        
                       }}
                     />
                   </div>
