@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {TrashIcon , ChevronLeftIcon, ChevronRightIcon,PencilIcon } from '@heroicons/react/24/solid';
 
 
-const Calendar = ({ list, calendarSort, isSort, setTags, tg ,deleteListTag}) => {
+const Calendar = ({ list, calendarSort, isSort, setTags, tg ,deleteListTag,selectAll,setSelectAll}) => {
 
   const [sortDay, setSortDay] = useState([])
   const [sortTag, setSortTag] = useState([])
-  const [selectAll, setSelectAll] = useState(false)
+  // const [selectAll, setSelectAll] = useState(false)
 
   const [sortIsEdit, setSortIsEdit] = useState(false)
   const [addTagText,setAddTagText] = useState('')

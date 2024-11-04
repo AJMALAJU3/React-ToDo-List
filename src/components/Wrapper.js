@@ -5,6 +5,7 @@ import Task from './Task';
 import Alert from './Alert';
 import SortedData from './sortedData';
 
+
 const getMyLists = () => {
     const lists = localStorage.getItem('lists');
     if (lists) {
@@ -48,6 +49,7 @@ function Wrapper() {
     const [selectAll,setSelectAll] = useState(false)
     const [tags,setTags] = useState(getMyTags)
 
+    
     if (listId === null && lists.length > 0) {
         const clickedList = lists.find(li => li.clicked);
         if (clickedList) {
@@ -175,7 +177,7 @@ function Wrapper() {
                                     key={list.id}
                                     onClick={() => selectList(list.id)}
                                     className={`flex justify-between items-center 
-                                    ${list.clicked ? 'bg-amber-300 text-stone-600' : 'text-stone-100 hover:bg-stone-600 '} 
+                                    ${list.clicked && !selectAll ? 'bg-amber-300 text-stone-600' : 'text-stone-100 hover:bg-stone-600 '} 
                                     p-3 rounded-lg shadow-lg transition duration-200 ease-linear group`}
                                 >
                                     {list.newList}
@@ -232,7 +234,7 @@ function Wrapper() {
 
 
 <div className="md:col-span-4 lg:col-span-3 bg-neutral-700 hidden md:block  overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-  <Calendar list={lists} calendarSort={calendarSort} isSort={setIsSorting} setTags={setTags} tg={tags} deleteListTag={deleteListTag}/>
+  <Calendar list={lists} calendarSort={calendarSort} isSort={setIsSorting} setTags={setTags} tg={tags} deleteListTag={deleteListTag} selectAll={selectAll} setSelectAll={setSelectAll}/>
 </div>
 
         </>
