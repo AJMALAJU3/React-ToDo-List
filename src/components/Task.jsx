@@ -82,7 +82,6 @@ function Task(props) {
   };
   let newList = useRef(null)
   useEffect(() => {
-    console.log(props.listId, 'id added')
     setTaskList(getlist(props.listId))
   }, [props.listId])
 

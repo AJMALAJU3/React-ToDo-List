@@ -225,7 +225,7 @@ function Wrapper() {
                 )}
             </div>
             {isSorting ? (
-    <SortedData sort={calendarSort} list={lists} date={sortDate} tag={sortTag} selectAll={selectAll} listId={listId}/>
+    <SortedData  date={sortDate} tag={sortTag} selectAll={selectAll} listId={listId} tg={tags}/>
 ) : (
     <Task listId={listId} taskUpdate={listUpdated} tg={tags} />
 )}

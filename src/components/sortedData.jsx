@@ -16,7 +16,7 @@ const getMyLists = () => {
   }
 };
 
-function SortedData({ sort, list, date, tag, selectAll, listId }) {
+function SortedData({ date, tag, selectAll, listId ,tg}) {
   const [lists, setLists] = useState(getMyLists());
   const [greeting, setGreeting] = useState('');
 
@@ -45,7 +45,7 @@ function SortedData({ sort, list, date, tag, selectAll, listId }) {
   return (
     <div className="md:col-span-7 flex flex-col w-full">
       <div className="p-10 pt-10 w-full flex items-center justify-center">
-        <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center mr-5">
+        {/* <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center mr-5">
           <div className="flex flex-col items-center">
             <span className="block text-3xl">{month}</span>
             <span className="block text-4xl">{day}</span>
@@ -54,7 +54,8 @@ function SortedData({ sort, list, date, tag, selectAll, listId }) {
         <div>
           <h1 className="text-6xl font-bold text-stone-300">{greeting}</h1>
           <h1 className="text-4xl font-bold text-stone-700 ml-4">Plan Your Task's Today!</h1>
-        </div>
+        </div> */}
+        <h1 className="text-6xl font-bold text-stone-300">Sorted Tasks</h1>
       </div>
 
       <div className="col-span-10 px-10 py-4 text-stone-100 w-full flex flex-col items-center">
@@ -63,56 +64,24 @@ function SortedData({ sort, list, date, tag, selectAll, listId }) {
             {lists.map((myList, index) => {
               if (selectAll && date.length === 0 && tag.length === 0) {
                 return myList.todoList.map((todolist, subIndex) => (
-                  <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} />
+                  <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
                 ));
               } else if (selectAll && (date.length > 0 || tag.length > 0)) {
-                // If selectAll is true, display filtered tasks based on sorting criteria
+
                 return myList.todoList.map((todolist, subIndex) => {
                   if (shouldShowTask(todolist)) {
                     return (
-                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} />
+                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
                     );
                   }
                   return null;
                 });
               } else if (myList.id === listId) {
-                // Display only tasks from the specified listId and apply sorting
+
                 return myList.todoList.map((todolist, subIndex) => {
                   if (shouldShowTask(todolist)) {
                     return (
-                      <li
-                        key={`${index}-${subIndex}`}
-                        className="flex flex-col justify-between bg-neutral-700 text-stone-100 hover:text-stone-600 p-3 rounded-lg hover:bg-neutral-800 shadow-lg"
-                      >
-                        <span
-                          className="flex items-center space-x-3 justify-between"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <div className="flex items-center space-x-3">
-                            <input
-                              type="checkbox"
-                              className="h-6 w-6 rounded-md accent-amber-300"
-                              checked={todolist.status === 'completed'}
-                              readOnly
-                            />
-                            <span className="flex flex-col mb-2">
-                              <span className="text-neutral-400 text-xs">{todolist.date}</span>
-                              <span
-                                className={`${
-                                  todolist.status === 'completed'
-                                    ? 'line-through text-neutral-400'
-                                    : 'text-neutral-300'
-                                } text-md font-semibold mb-1 mt-1`}
-                              >
-                                {todolist.task}
-                              </span>
-                              <span className="text-neutral-400 text-xs">
-                                {todolist.tags.map(tag => `#${tag.toLowerCase()} `)}
-                              </span>
-                            </span>
-                          </div>
-                        </span>
-                      </li>
+                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
                     );
                   }
                   return null;
