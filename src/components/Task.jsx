@@ -399,23 +399,12 @@ function Task(props) {
                         </div>
 
                       </div>
-                      {/* <TrashIcon 
-                            className={`h-5 w-5 text-neutral-400 cursor-pointer ${todoTask.id === isEdit ? 'block': 'hidden'}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              let updated = {...taskList}
-                              updated.todoList = updated.todoList.filter((task) => task.id !== todoTask.id);
-                              setTaskList(updated);
-                              setLists(updateChanges(updated, lists, props.listId))
-                              // localStorage.setItem('lists', JSON.stringify(updateChanges(updatedLists, lists, props.listId)));
-
-                            }}
-                          /> */}
+                      
                       <TrashIcon
                         className={`h-5 w-5 text-neutral-400 cursor-pointer ${todoTask.id === isEdit ? 'block' : 'hidden'}`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(todoTask.id); // Call the delete handler
+                          handleDelete(todoTask.id); 
                         }}
                       />
                     </div>
