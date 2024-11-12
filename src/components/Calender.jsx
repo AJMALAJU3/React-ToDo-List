@@ -93,68 +93,67 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg ,deleteListTag,selec
     <>
       <div className="max-w-md mx-auto mt-8 p-4 md:p-6 lg:p-8">
         <div className=''>
-          <div className="flex justify-between items-center mb-4">
-            <button onClick={handlePrevMonth} className="rounded-lg bg-stone-500 hover:bg-stone-600 p-2 md:p-3">
-              <ChevronLeftIcon className="w-6 h-6 text-amber-50" />
-            </button>
-            <span className="flex flex-col text-center">
-              <span className="text-amber-50 font-bold text-lg md:text-xl lg:text-2xl"> {year}</span>
-              <span className="text-amber-50 font-bold text-base md:text-lg lg:text-xl">
-                {new Date(year, month).toLocaleString('default', { month: 'long' })}
-              </span>
-            </span>
-            <button onClick={handleNextMonth} className="rounded-lg bg-stone-500 hover:bg-stone-600 p-2 md:p-3">
-              <ChevronRightIcon className="w-6 h-6 text-amber-50" />
-            </button>
-          </div>
+        <div className="flex justify-between items-center mb-4">
+  <button onClick={handlePrevMonth} className="rounded-lg bg-stone-500 hover:bg-stone-600 p-2 md:p-3">
+    <ChevronLeftIcon className="w-5 h-5 md:w-6 md:h-6 text-amber-50" />
+  </button>
+  <span className="flex flex-col text-center">
+    <span className="text-amber-50 font-bold text-sm md:text-lg lg:text-xl"> {year}</span>
+    <span className="text-amber-50 font-bold text-xs md:text-base lg:text-lg">
+      {new Date(year, month).toLocaleString('default', { month: 'long' })}
+    </span>
+  </span>
+  <button onClick={handleNextMonth} className="rounded-lg bg-stone-500 hover:bg-stone-600 p-2 md:p-3">
+    <ChevronRightIcon className="w-5 h-5 md:w-6 md:h-6 text-amber-50" />
+  </button>
+</div>
 
-          <div className="grid grid-cols-7 text-center font-semibold mb-2 text-amber-50">
-            <div className="p-2">S</div>
-            <div className="p-2">M</div>
-            <div className="p-2">T</div>
-            <div className="p-2">W</div>
-            <div className="p-2">T</div>
-            <div className="p-2">F</div>
-            <div className="p-2">S</div>
-          </div>
+<div className="grid grid-cols-7 text-center font-semibold mb-2 text-amber-50 text-xs md:text-sm lg:text-base">
+  <div className="p-1 md:p-2">S</div>
+  <div className="p-1 md:p-2">M</div>
+  <div className="p-1 md:p-2">T</div>
+  <div className="p-1 md:p-2">W</div>
+  <div className="p-1 md:p-2">T</div>
+  <div className="p-1 md:p-2">F</div>
+  <div className="p-1 md:p-2">S</div>
+</div>
 
-          <div className="grid grid-cols-7 gap-2">
-            {Array.from({ length: firstDayIndex }, (_, index) => (
-              <div key={index} className="p-4 rounded-lg" />
-            ))}
+<div className="grid grid-cols-7 gap-1 md:gap-2">
+  {Array.from({ length: firstDayIndex }, (_, index) => (
+    <div key={index} className="p-2 md:p-4 rounded-lg" />
+  ))}
 
-            {days.map((day) => {
-              const taskCount = freqTasks[day] ? freqTasks[day].length : 0;
+  {days.map((day) => {
+    const taskCount = freqTasks[day] ? freqTasks[day].length : 0;
 
-              const getBgColor = (taskCount) => {
-                if (taskCount === 0) return 'bg-neutral-700';
-                if (taskCount > 0) return 'bg-neutral-800';
-              };
+    const getBgColor = (taskCount) => {
+      if (taskCount === 0) return 'bg-neutral-700';
+      if (taskCount > 0) return 'bg-neutral-800';
+    };
 
-              return (
-                <div
-                  key={day}
-                  onClick={() => setSortDay(prev => {
-                    let updatedDays = [...prev];
-                    const clickedDay = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-                    if (prev.includes(clickedDay)) {
-                      updatedDays = updatedDays.filter(p => p !== clickedDay);
-                    } else {
-                      updatedDays = [...updatedDays, clickedDay];
-                    }
-                    return updatedDays;
-                  })}
-                  className={`p-2 my-2 rounded-full text-center text-amber-50 text-xs md:text-sm ${sortDay.includes(`${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`) ?
-                      'bg-neutral-500 ring-2 ring-neutral-400' :
-                      getBgColor(taskCount)
-                    } ${isCurrentDay(day) ? 'ring-2 ring-amber-400' : ''}`}
-
-                >
-                  {day}
-                </div>
-              );
-            })}
-          </div>
+    return (
+      <div
+        key={day}
+        onClick={() => setSortDay(prev => {
+          let updatedDays = [...prev];
+          const clickedDay = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+          if (prev.includes(clickedDay)) {
+            updatedDays = updatedDays.filter(p => p !== clickedDay);
+          } else {
+            updatedDays = [...updatedDays, clickedDay];
+          }
+          return updatedDays;
+        })}
+        className={` w-6 h-7 p-1 m-1 flex justify-center items-center rounded-full text-center text-amber-50 text-xs md:text-sm lg:text-base ${sortDay.includes(`${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`) ?
+            'bg-neutral-500 ring-2 ring-neutral-400' :
+            getBgColor(taskCount)
+          } ${isCurrentDay(day) ? 'ring-2 ring-amber-400' : ''}`}
+      >
+        {day}
+      </div>
+    );
+  })}
+</div>
 
           <div className="w-full flex items-center justify-around py-6">
             <button

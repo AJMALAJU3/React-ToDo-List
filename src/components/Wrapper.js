@@ -104,12 +104,15 @@ function Wrapper() {
         <>
             <div className='lg:hidden'>
                 <div className='w-full lg:hidden fixed top-0 left-0 bg-neutral-700 z-50 flex justify-between px-2'>
-                    <div className="flex justify-start items-center space-x-2 p-1 h-14">
-
+                    <div className="flex justify-start items-center space-x-2 p-1 h-14 "  onClick={leftMenu}>
                         <CalendarIcon
                             className="w-10 h-10 text-amber-400 p-1 cursor-pointer"
-                            onClick={leftMenu}
+                           
                         />
+                    <h1 className={`font-bold text-stone-100 duration-150 transition-all  text-lg md:text-2xl lg:text-3xl rounded-lg ${isLeftMenuOpen ? 'opacity-100' : 'translate-x-[-2rem] opacity-0'}`}>
+                        TIC TASC
+                    </h1>
+                    
                     </div>
                     <div className="flex items-center space-x-2 ">
                         <ArrowsUpDownIcon className="w-10 h-10 text-stone-400 p-1 cursor-pointer"
@@ -143,7 +146,7 @@ function Wrapper() {
             {isSorting ? (
                 <SortedData date={sortDate} tag={sortTag} selectAll={selectAll} listId={listId} tg={tags} />
             ) : (
-                <Task listId={listId} taskUpdate={listUpdated} tg={tags} />
+                <Task listId={listId} taskUpdate={listUpdated} tg={tags} leftMenu={leftMenu}/>
             )}
 
 

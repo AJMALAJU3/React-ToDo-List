@@ -202,28 +202,32 @@ function Task(props) {
                       <span><input type="date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} className=" rounded-md bg-neutral-700 text-amber-50" /></span>
                     </div>
                     <div className='grid grid-cols-3'>
-                      <h1>Tags </h1>
-                      <span className='flex col-span-2'>
-                        {tg.length > 0 && (
-                          tg.map(t => (
-                            <div className='p-1 text-center' key={t}>
-                              <p
-                                onClick={() => {
-                                  setTaskTags((prevTaskTags) =>
-                                    prevTaskTags.includes(t)
-                                      ? prevTaskTags.filter(tag => tag !== t)
-                                      : [...prevTaskTags, t]
-                                  );
-                                }}
-                                className={`${taskTags.includes(t) ? 'bg-stone-400' : ''} px-1 rounded-md cursor-pointer`}>
-                                {t}
-                              </p>
-                            </div>
-                          ))
-                        )}
-                      </span>
+  <h1>Tags</h1>
+  <span className='flex col-span-2'>
+    {tg.length > 0 ? (
+      tg.map(t => (
+        <div className='p-1 text-center' key={t}>
+          <p
+            onClick={() => {
+              setTaskTags((prevTaskTags) =>
+                prevTaskTags.includes(t)
+                  ? prevTaskTags.filter(tag => tag !== t)
+                  : [...prevTaskTags, t]
+              );
+            }}
+            className={`${
+              taskTags.includes(t) ? 'bg-stone-400' : ''
+            } px-1 rounded-md cursor-pointer`}>
+            {t}
+          </p>
+        </div>
+      ))
+    ) : (
+      <p className='text-yellow-600'>" Add tags to prioritise and sort easily "</p>
+    )}
+  </span>
+</div>
 
-                    </div>
                   </div>
                 )}
               </div>
@@ -419,26 +423,27 @@ function Task(props) {
     )
   } else {
     return (
-      <div className="md:col-span-7 flex flex-col items-center w-full justify-center">
-        <div className="p-10 pt-10 w-full flex items-center justify-center">
-          <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center mr-5">
-            <div className="flex flex-col items-center">
-              <span className="block text-3xl">{month}</span>
-              <span className="block text-4xl">{day}</span>
+      
+      <div className="md:col-span-7 flex flex-col items-center w-full justify-center h-screen">
+        <div className=" flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center">
+            <div className="flex space-x-3  items-center">
+              <span className="block text-3xl">{month} -</span>
+              <span className="block text-3xl">{day}</span>
             </div>
           </h1>
           <div className="">
+            {/* <div>
+              <h1 className="text-3xl font-bold text-stone-300 text-center">{greeting}</h1>
+            </div> */}
             <div>
-              <h1 className="text-6xl font-bold text-stone-300 ">{greeting}</h1>
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-amber-400 ml-4">Plan Your Task's Today !</h1>
+              <h1 className="text-4xl font-bold text-amber-400 ml-4 text-center">Plan Your Task's Today !</h1>
             </div>
           </div>
         </div>
 
         <div className="mt-10">
-          <h1 className="font-bold text-stone-400">Select a list to add Task..</h1>
+          <h1 className="font-bold text-stone-400" onClick={()=>props.leftMenu()}>Select a list to add Task..</h1>
         </div>
       </div>
     )

@@ -82,12 +82,33 @@ function Mylist({ lists, selectAll, setLists, setListId, getMyLists }) {
                     <CalendarIcon className="w-10 h-10 text-amber-400 p-1" />
                 </div>
 
-                <div className="rounded-lg p-2 w-full max-w-md">
-                    <h1 className="font-bold text-1xl mb-4 text-stone-100">My Lists</h1>
+                <div className="rounded-lg p-1 w-full max-w-md">
+                    <h1 className="font-bold text-1xl mb-4 text-amber-400 text-center">My Lists</h1>
+                    {isEditing ? (
+                        <div className='mt-3 '>
+                            <input
+                                type="text"
+                                ref={inputRef}
+                                value={inputValue}
+                                onChange={handleInputChange}
+                                onKeyPress={handleKeyPress}
+                                placeholder="Add a new list..."
+                                className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-800 rounded-lg p-2 w-full mb-2 text-amber-50"
+                                onBlur={() => setIsEditing(false)}
+                            />
+                        </div>
+                    ) : (
+                        <div
+                            onClick={handleClickAddList}
+                            className="mt-4 text-center font-bold text-neutral-400 rounded-lg px-4 py-2 w-full bg-neutral-800 mb-2"
+                        >
+                            + New List
+                        </div>
+                    )}
                     <ul
                         id="taskList"
-                        className="space-y-1"
-                        style={{ maxHeight: '27em', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}
+                        className="space-y-1 p-1 py-2 bg-neutral-800 rounded-lg shadow-lg"
+                        style={{ height: '27em', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}
                     >
                         {lists.length > 0 ? (
                             lists.map((list) => (
@@ -114,27 +135,7 @@ function Mylist({ lists, selectAll, setLists, setListId, getMyLists }) {
                             null
                         )}
                     </ul>
-                    {isEditing ? (
-                        <div className='mt-3'>
-                            <input
-                                type="text"
-                                ref={inputRef}
-                                value={inputValue}
-                                onChange={handleInputChange}
-                                onKeyPress={handleKeyPress}
-                                placeholder="Add a new list..."
-                                className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-700 rounded-lg p-2 w-full pt-4 text-amber-50"
-                                onBlur={() => setIsEditing(false)}
-                            />
-                        </div>
-                    ) : (
-                        <div
-                            onClick={handleClickAddList}
-                            className="mt-4 text-center font-bold text-neutral-400 rounded-lg px-4 py-2 w-full"
-                        >
-                            + New List
-                        </div>
-                    )}
+                    
                 </div>
                 {isModalOpen && (
                     <Alert
