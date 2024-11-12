@@ -146,7 +146,7 @@ function Wrapper() {
             {isSorting ? (
                 <SortedData date={sortDate} tag={sortTag} selectAll={selectAll} listId={listId} tg={tags} />
             ) : (
-                <Task listId={listId} taskUpdate={listUpdated} tg={tags} leftMenu={leftMenu}/>
+                <Task listId={listId} taskUpdate={listUpdated} tg={tags} leftMenu={setIsLeftMenuOpen} rightMenu={setIsRightMenuOpen}/>
             )}
 
 

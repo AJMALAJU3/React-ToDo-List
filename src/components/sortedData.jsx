@@ -44,18 +44,9 @@ function SortedData({ date, tag, selectAll, listId ,tg}) {
 
   return (
     <div className="md:col-span-7 flex flex-col w-full">
-      <div className="p-10 pt-10 w-full flex items-center justify-center">
-        {/* <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center mr-5">
-          <div className="flex flex-col items-center">
-            <span className="block text-3xl">{month}</span>
-            <span className="block text-4xl">{day}</span>
-          </div>
-        </h1>
-        <div>
-          <h1 className="text-6xl font-bold text-stone-300">{greeting}</h1>
-          <h1 className="text-4xl font-bold text-stone-700 ml-4">Plan Your Task's Today!</h1>
-        </div> */}
-        <h1 className="text-6xl font-bold text-stone-300">Sorted Tasks</h1>
+      <div className="p-10 pt-24 w-full flex flex-col items-center justify-center">
+        <h1 className="md:text-6xl text-3xl font-bold text-stone-300">Sorted Tasks</h1>
+        <p className='text-amber-500 text-[10px] md:text-[18px]'>( Click refresh to view all previous tasks )</p>
       </div>
 
       <div className="col-span-10 px-10 py-4 text-stone-100 w-full flex flex-col items-center">

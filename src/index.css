@@ -11,6 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* This inverts the color, making the icon white */
+  opacity: 0.8; /* Adjust opacity if needed */
+}
+
+input[type="date"]::-moz-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

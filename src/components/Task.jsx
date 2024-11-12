@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { PencilIcon, XMarkIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { PencilIcon, XMarkIcon, TrashIcon} from '@heroicons/react/24/solid';
 
 
 
@@ -147,7 +147,7 @@ function Task(props) {
 
   if (props.listId) {
     return (
-      <div className="md:col-span-10 md:col-start-2 flex flex-col lg:col-span-7  items-center w-full overflow-y-auto mt-8" style={{ scrollbarWidth: 'none' }}>
+      <div className="md:col-span-10 md:col-start-2 flex flex-col lg:col-span-7  items-center w-full overflow-y-auto mt-8" style={{ scrollbarWidth: 'none' }} onClick={()=>props.rightMenu(false)}>
 
 
         <div className="p-10 pt-10  w-full flex justify-center items-center">
@@ -171,7 +171,7 @@ function Task(props) {
         <div className="col-span-10 px-10 py-4 text-stone-100 w-full flex flex-col items-center">
           <div className='w-full'>
             <div className="bg-neutral-700 p-3 mb-5 text-stone-100 hover:text-stone-50 rounded-lg shadow-lg space-y-3">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pt-3">
                 <input
                   type="text"
                   ref={newList}
@@ -181,11 +181,10 @@ function Task(props) {
                   id="taskInput"
                   value={taskText}
                   autocomplete="off"
-                  className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-700 rounded-lg p-2 w-full pt-4"
+                  className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-800 rounded-lg p-2 w-full"
                   placeholder="Add Todo"
                 />
-
-                <button onClick={!taskText ? null : AddTaskToList} className={`rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}>Add</button>
+                <button onClick={!taskText ? null : AddTaskToList} className={`rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}>done</button>
 
               </div>
 
@@ -203,7 +202,8 @@ function Task(props) {
                     </div>
                     <div className='grid grid-cols-3'>
   <h1>Tags</h1>
-  <span className='flex col-span-2'>
+  <span className=' cursor-pointer flex flex-wrap w-full gap-1 col-span-2'
+  style={{ height: '9vh', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}>
     {tg.length > 0 ? (
       tg.map(t => (
         <div className='p-1 text-center' key={t}>
@@ -424,7 +424,7 @@ function Task(props) {
   } else {
     return (
       
-      <div className="md:col-span-7 flex flex-col items-center w-full justify-center h-screen">
+      <div className="md:col-span-7 flex flex-col items-center w-full justify-center h-screen" >
         <div className=" flex flex-col items-center justify-center">
           <h1 className="text-3xl font-bold text-stone-100 rounded-lg text-center">
             <div className="flex space-x-3  items-center">
@@ -433,9 +433,7 @@ function Task(props) {
             </div>
           </h1>
           <div className="">
-            {/* <div>
-              <h1 className="text-3xl font-bold text-stone-300 text-center">{greeting}</h1>
-            </div> */}
+            
             <div>
               <h1 className="text-4xl font-bold text-amber-400 ml-4 text-center">Plan Your Task's Today !</h1>
             </div>
@@ -443,7 +441,7 @@ function Task(props) {
         </div>
 
         <div className="mt-10">
-          <h1 className="font-bold text-stone-400" onClick={()=>props.leftMenu()}>Select a list to add Task..</h1>
+          <h1 className="font-bold text-stone-400" onClick={()=>props.leftMenu(true)}>Select a list to add Task..</h1>
         </div>
       </div>
     )
