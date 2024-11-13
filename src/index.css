@@ -13,7 +13,7 @@ code {
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1); /* This inverts the color, making the icon white */
-  opacity: 0.8; /* Adjust opacity if needed */
+  opacity: 0.0; /* Adjust opacity if needed */
 }
 
 input[type="date"]::-moz-calendar-picker-indicator {

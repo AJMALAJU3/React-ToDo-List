@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { PencilIcon, XMarkIcon, TrashIcon} from '@heroicons/react/24/solid';
+import { PencilIcon, XMarkIcon, TrashIcon,CalendarIcon,FolderPlusIcon} from '@heroicons/react/24/solid';
 
 
 
@@ -56,7 +56,7 @@ function Task(props) {
 
   const tg = props.tg
   const [taskList, setTaskList] = useState(getlist(props.listId))
-
+  const dateInputRef = useRef(null);
   const [taskText, setTaskText] = useState('')
   const [taskDate, setTaskDate] = useState("")
   const [taskTags, setTaskTags] = useState([])
@@ -184,7 +184,8 @@ function Task(props) {
                   className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-800 rounded-lg p-2 w-full"
                   placeholder="Add Todo"
                 />
-                <button onClick={!taskText ? null : AddTaskToList} className={`rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}>done</button>
+                <FolderPlusIcon onClick={!taskText ? null : AddTaskToList} className={`w-12 rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}/>
+                {/* <button >done</button> */}
 
               </div>
 
@@ -195,15 +196,27 @@ function Task(props) {
                 }}
               >
                 {isExpanded && (
-                  <div className="mt-2 transition-opacity duration-800 py-5 px-2 space-y-4 ease-in-out opacity-100">
+                  <div className="mt-2 transition-opacity duration-800 bg-neutral-800 p-2 space-y-4 ease-in-out opacity-100 rounded-lg">
                     <div className='grid grid-cols-3'>
                       <h1>Date </h1>
-                      <span><input type="date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} className=" rounded-md bg-neutral-700 text-amber-50" /></span>
+                      <span
+      onClick={() => dateInputRef.current && dateInputRef.current.showPicker()}
+      className="cursor-pointer relative flex items-center col-span-2 md:col-span-1"
+    >
+      <input
+        type="date"
+        ref={dateInputRef}
+        value={taskDate}
+        onChange={(e) => setTaskDate(e.target.value)}
+        className="rounded-md bg-neutral-700 p-2 text-amber-50 outline-none w-full"
+      />
+      <CalendarIcon className='w-6 absolute right-1' />
+    </span>
                     </div>
                     <div className='grid grid-cols-3'>
   <h1>Tags</h1>
   <span className=' cursor-pointer flex flex-wrap w-full gap-1 col-span-2'
-  style={{ height: '9vh', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}>
+  style={{ height: '12vh', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}>
     {tg.length > 0 ? (
       tg.map(t => (
         <div className='p-1 text-center' key={t}>

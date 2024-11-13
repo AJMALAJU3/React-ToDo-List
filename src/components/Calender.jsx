@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrashIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon } from '@heroicons/react/24/solid';
+import { TrashIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon, DocumentIcon } from '@heroicons/react/24/solid';
 
 
 const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, selectAll, setSelectAll }) => {
@@ -19,7 +19,7 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
       isSort(false)
     }
 
-  }, [sortDay, sortTag, selectAll, calendarSort, isSort])
+  }, [sortDay, sortTag, selectAll, isSort])
 
 
   const [month, setMonth] = useState(new Date().getMonth());
@@ -190,23 +190,26 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
           </div>
 
           <div class="flex flex-wrap w-full gap-1 ">
-            <div className={`flex gap-3 w-full items-center ${sortIsEdit ? 'block' : 'hidden'}`}>
-              <input
-                type="text"
-                onChange={(e) => setAddTagText(e.target.value)}
-                value={addTagText}
-                className={` rounded-md cursor-pointer w-auto flex items-center justify-center text-amber-50 bg-neutral-900 border-0 p-2 focus:outline-none`}
-              />
+          <div className={`relative flex items-center ${sortIsEdit ? 'block' : 'hidden'}`}>
+  <input
+    type="text"
+    onChange={(e) => setAddTagText(e.target.value)}
+    value={addTagText}
+    className="rounded-md cursor-pointer w-auto flex-grow text-amber-50 bg-neutral-900 border-0 p-2 focus:outline-none pr-10"
+  />
+  <DocumentIcon
+    className={`h-5 w-5 ${addTagText === '' ? 'text-neutral-500' : 'text-neutral-300'} absolute right-3 cursor-pointer`}
+    onClick={(e) => {
+      e.stopPropagation();
+      if (addTagText !== '') {
+        addTag(addTagText);
+      }
+    }}
+  />
 
 
-              <p className={`h-5 w-5 ${addTagText === '' ? 'text-stone-600' : 'text-neutral-400'} cursor-pointer`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (addTagText !== '') {
-                    addTag(addTagText)
-                  }
 
-                }}>add</p>
+              
             </div>
 
             {Array.isArray(tg) && tg.length > 0 ? (
@@ -243,6 +246,7 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
 
                       }}
                     />
+                   
                   </div>
 
                 )
