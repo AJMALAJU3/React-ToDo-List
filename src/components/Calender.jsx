@@ -6,10 +6,16 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
 
   const [sortDay, setSortDay] = useState([])
   const [sortTag, setSortTag] = useState([])
-  // const [selectAll, setSelectAll] = useState(false)
-
   const [sortIsEdit, setSortIsEdit] = useState(false)
   const [addTagText, setAddTagText] = useState('')
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
+  const days = [...Array(daysInMonth(month, year)).keys()].map((day) => day + 1);
+  const firstDayIndex = getFirstDayOfMonth(month, year);
+  const [freqTasks, setFreqTasks] = useState({});
 
   useEffect(() => {
     if (sortDay.length > 0 || sortTag.length > 0 || selectAll) {
@@ -18,15 +24,7 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
     } else {
       isSort(false)
     }
-
   }, [sortDay, sortTag, selectAll, isSort])
-
-
-  const [month, setMonth] = useState(new Date().getMonth());
-  const [year, setYear] = useState(new Date().getFullYear());
-
-  const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
-  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
 
   const handlePrevMonth = () => {
     if (month === 0) {
@@ -45,6 +43,7 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
       setMonth(month + 1);
     }
   };
+
   const addTag = (tag) => {
     tag = tag.toLowerCase()
     setTags(prev => {
@@ -55,8 +54,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
     });
     setAddTagText('')
   };
-  const days = [...Array(daysInMonth(month, year)).keys()].map((day) => day + 1);
-  const firstDayIndex = getFirstDayOfMonth(month, year);
 
   const currentDate = new Date();
   const isCurrentDay = (day) =>
@@ -64,7 +61,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
     month === currentDate.getMonth() &&
     year === currentDate.getFullYear();
 
-  const [freqTasks, setFreqTasks] = useState({});
 
   useEffect(() => {
     const taskOfDays = {};
@@ -74,8 +70,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
         const taskDay = taskDate.getDate();
         const taskMonth = taskDate.getMonth();
         const taskYear = taskDate.getFullYear();
-
-
         if (taskMonth === month && taskYear === year) {
           if (taskOfDays[taskDay]) {
             taskOfDays[taskDay].push(task.id);
@@ -85,14 +79,13 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
         }
       });
     });
-
     setFreqTasks(taskOfDays);
   }, [list, month, year]);
 
   return (
     <>
       <div className="max-w-md mx-auto mt-8 p-4 md:p-6 lg:p-8 "
-      style={{ height: '90vh', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}>
+        style={{ height: '90vh', overflowY: 'auto', paddingBottom: '1em', scrollbarWidth: 'none' }}>
         <div className=''>
           <div className="flex justify-between items-center">
             <button onClick={handlePrevMonth} className="rounded-lg bg-stone-500 hover:bg-stone-600 p-2 md:p-3">
@@ -108,7 +101,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
               <ChevronRightIcon className="w-5 h-5 md:w-6 md:h-6 text-amber-50" />
             </button>
           </div>
-
           <div className="grid grid-cols-7 text-center font-semibold mb-2 text-amber-50 text-xs md:text-sm lg:text-base">
             <div className="p-1 md:p-2">S</div>
             <div className="p-1 md:p-2">M</div>
@@ -118,20 +110,16 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
             <div className="p-1 md:p-2">F</div>
             <div className="p-1 md:p-2">S</div>
           </div>
-
           <div className="grid grid-cols-7 gap-1 md:gap-2">
             {Array.from({ length: firstDayIndex }, (_, index) => (
               <div key={index} className="p-2 md:p-4 rounded-lg" />
             ))}
-
             {days.map((day) => {
               const taskCount = freqTasks[day] ? freqTasks[day].length : 0;
-
               const getBgColor = (taskCount) => {
                 if (taskCount === 0) return 'bg-neutral-700 ';
-                if (taskCount > 0) return 'bg-neutral-800 ring-2 ring-neutral-800' ;
+                if (taskCount > 0) return 'bg-neutral-800 ring-2 ring-neutral-800';
               };
-
               return (
                 <div
                   key={day}
@@ -155,7 +143,6 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
               );
             })}
           </div>
-
           <div className="w-full flex items-center justify-around py-6">
             <button
               onClick={() => {
@@ -188,33 +175,26 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
               className="h-4 w-4 text-neutral-400 cursor-pointer"
             /> : 'Done'}</button>
           </div>
-
           <div class="flex flex-wrap w-full gap-1 ">
-          <div className={`relative flex items-center ${sortIsEdit ? 'block' : 'hidden'}`}>
-  <input
-    type="text"
-    onChange={(e) => setAddTagText(e.target.value)}
-    value={addTagText}
-    className="rounded-md cursor-pointer w-auto flex-grow text-amber-50 bg-neutral-900 border-0 p-2 focus:outline-none pr-10"
-  />
-  <DocumentIcon
-    className={`h-5 w-5 ${addTagText === '' ? 'text-neutral-500' : 'text-neutral-300'} absolute right-3 cursor-pointer`}
-    onClick={(e) => {
-      e.stopPropagation();
-      if (addTagText !== '') {
-        addTag(addTagText);
-      }
-    }}
-  />
-
-
-
-              
+            <div className={`relative flex items-center ${sortIsEdit ? 'block' : 'hidden'}`}>
+              <input
+                type="text"
+                onChange={(e) => setAddTagText(e.target.value)}
+                value={addTagText}
+                className="rounded-md cursor-pointer w-auto flex-grow text-amber-50 bg-neutral-900 border-0 p-2 focus:outline-none pr-10"
+              />
+              <DocumentIcon
+                className={`h-5 w-5 ${addTagText === '' ? 'text-neutral-500' : 'text-neutral-300'} absolute right-3 cursor-pointer`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (addTagText !== '') {
+                    addTag(addTagText);
+                  }
+                }}
+              />
             </div>
-
             {Array.isArray(tg) && tg.length > 0 ? (
               tg.map((t, index) => (
-
                 !sortIsEdit ? (<div
                   key={index}
                   onClick={() => {
@@ -236,27 +216,21 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
                       value={t}
                       className={` rounded-md cursor-pointer w-auto flex items-center justify-center text-amber-50 bg-neutral-700 border-0 p-2 focus:outline-none`}
                     />
-
                     <TrashIcon
                       className={`h-5 w-5 text-neutral-400 cursor-pointer`}
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteListTag(t)
                         setTags(tags => tags.filter(p => p !== t))
-
                       }}
                     />
-                   
                   </div>
-
                 )
               ))
             ) : (
               <div className='text-amber-50'>No tags available !</div>
             )}
           </div>
-
-
         </div>
       </div>
     </>

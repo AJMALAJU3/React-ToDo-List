@@ -184,8 +184,7 @@ function Task(props) {
                   className="border-none outline-none focus:outline-none focus:ring-0 bg-neutral-800 rounded-lg p-2 w-full"
                   placeholder="Add Todo"
                 />
-                <FolderPlusIcon onClick={!taskText ? null : AddTaskToList} className={`w-12 rounded-lg px-2 py-1 ${taskText === '' ? 'text-stone-600' : 'text-stone-400'} font-bold`}/>
-                {/* <button >done</button> */}
+                <FolderPlusIcon onClick={!taskText ? null : AddTaskToList} className={`w-12 rounded-lg px-2 py-1 ${taskText === '' ? 'text-neutral-600' : 'text-neutral-200'} font-bold`}/>
 
               </div>
 
@@ -236,7 +235,7 @@ function Task(props) {
         </div>
       ))
     ) : (
-      <p className='text-yellow-600'>" Add tags to prioritise and sort easily "</p>
+      <p className='text-yellow-500'>" Add tags to prioritise and sort easily "</p>
     )}
   </span>
 </div>
@@ -246,9 +245,6 @@ function Task(props) {
               </div>
             </div>
             <ul id="taskList" class="space-y-4">
-
-
-
               {props.listId && taskList.todoList && Array.isArray(taskList.todoList) ? (
                 taskList.todoList.map((todoTask) => (
 
@@ -418,7 +414,7 @@ function Task(props) {
                       </div>
                       
                       <TrashIcon
-                        className={`h-5 w-5 text-neutral-400 cursor-pointer ${todoTask.id === isEdit ? 'block' : 'hidden'}`}
+                        className={`h-5 md:w-5 w-10 text-neutral-400 cursor-pointer ${todoTask.id === isEdit ? 'block' : 'hidden'}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(todoTask.id); 

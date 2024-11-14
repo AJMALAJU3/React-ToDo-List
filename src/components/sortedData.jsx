@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ListData from './listData';
 
 
@@ -16,24 +16,8 @@ const getMyLists = () => {
   }
 };
 
-function SortedData({ date, tag, selectAll, listId ,tg}) {
+function SortedData({ date, tag, selectAll, listId, tg }) {
   const [lists, setLists] = useState(getMyLists());
-  const [greeting, setGreeting] = useState('');
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting('Good Morning');
-    } else if (hour >= 12 && hour < 17) {
-      setGreeting('Good Afternoon');
-    } else {
-      setGreeting('Good Evening');
-    }
-  }, []);
-
-  const today = new Date();
-  const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(today);
-  const day = today.getDate();
 
   const shouldShowTask = (todolist) => {
     if (Array.isArray(date) && (date.includes(todolist.date) || tag.some(t => todolist.tags.includes(t)))) {
@@ -55,14 +39,14 @@ function SortedData({ date, tag, selectAll, listId ,tg}) {
             {lists.map((myList, index) => {
               if (selectAll && date.length === 0 && tag.length === 0) {
                 return myList.todoList.map((todolist, subIndex) => (
-                  <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
+                  <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg} />
                 ));
               } else if (selectAll && (date.length > 0 || tag.length > 0)) {
 
                 return myList.todoList.map((todolist, subIndex) => {
                   if (shouldShowTask(todolist)) {
                     return (
-                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
+                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg} />
                     );
                   }
                   return null;
@@ -72,7 +56,7 @@ function SortedData({ date, tag, selectAll, listId ,tg}) {
                 return myList.todoList.map((todolist, subIndex) => {
                   if (shouldShowTask(todolist)) {
                     return (
-                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg}/>
+                      <ListData key={`${index}-${subIndex}`} todolist={todolist} index={index} subIndex={subIndex} listId={myList.id} setLists={setLists} lists={lists} tg={tg} />
                     );
                   }
                   return null;

@@ -5,23 +5,17 @@ import { PencilIcon, XMarkIcon, TrashIcon } from '@heroicons/react/24/solid';
 
 function ListData({ todolist, index, subIndex, taskList, setTaskList, props ,listId ,setLists,lists,tg}) {
 
-  const [isExpanded, setIsExpanded] = useState(false);
+
   const [isEdit, setIsEdit] = useState(null);
 
 
-  const handleFocus = () => {
-    setIsEdit(null);
-    setIsExpanded(true);
-  };
+  
+  
 useEffect(()=>{
     console.log(lists[0].todoList,'eff lists');
     return console.log(lists[0].todoList,'eff lists');
 },[lists])
-  const handleBlur = () => {
-    if (todolist.task === '') {
-      setIsExpanded(false);
-    }
-  };
+  
 
   const updateChanges = (updatedTaskList, lists, listId) => {
     return updatedTaskList;
