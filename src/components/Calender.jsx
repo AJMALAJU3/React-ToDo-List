@@ -175,8 +175,8 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
               className="h-4 w-4 text-neutral-400 cursor-pointer"
             /> : 'Done'}</button>
           </div>
-          <div class="flex flex-wrap w-full gap-1 ">
-            <div className={`relative flex items-center ${sortIsEdit ? 'block' : 'hidden'}`}>
+          <div class="flex flex-wrap  gap-1 ">
+            <div className={`relative flex items-center  ${sortIsEdit ? 'block' : 'hidden'}`}>
               <input
                 type="text"
                 onChange={(e) => setAddTagText(e.target.value)}
@@ -210,14 +210,14 @@ const Calendar = ({ list, calendarSort, isSort, setTags, tg, deleteListTag, sele
                 >
                   #{t}
                 </div>) : (
-                  <div className='flex gap-3 w-full items-center '>
+                  <div className='flex gap-3 w-full items-center'>
                     <input
                       type="text"
                       value={t}
                       className={` rounded-md cursor-pointer w-auto flex items-center justify-center text-amber-50 bg-neutral-700 border-0 p-2 focus:outline-none`}
                     />
                     <TrashIcon
-                      className={`h-5 w-5 text-neutral-400 cursor-pointer`}
+                       className="h-5 w-5 text-neutral-400 cursor-pointer flex-shrink-0"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteListTag(t)
